@@ -30,7 +30,6 @@ if (!checkRequiredFiles([paths.appAdminHtml, paths.appAdminIndexJs])) {
 measureFileSizesBeforeBuild(paths.appAdminBuild)
   .then(previousFileSizes => {
     fs.emptyDirSync(paths.appAdminBuild);
-    copyPublicFolder();
     return build(previousFileSizes);
   })
   .then(

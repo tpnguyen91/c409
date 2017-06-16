@@ -1,0 +1,12 @@
+deployment:
+  development:
+    branch: development
+    heroku:
+      appname: lottery-demo
+
+machine:
+  node:
+    version: 6.0.0
+dependencies:
+  override:
+    - yarn install
