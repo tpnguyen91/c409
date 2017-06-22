@@ -3,9 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "cheerio": "latest",
+    "express": "latest",
+    "mongoose": "^4.10.8",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "react-router": "3.0.2"
+    "react-router": "3.0.2",
+    "request": "latest",
+    "webpack-hot-middleware": "^2.18.0"
   },
   "devDependencies": {
     "autoprefixer": "7.1.0",
@@ -46,7 +51,8 @@
     "whatwg-fetch": "2.0.3"
   },
   "scripts": {
-    "start": "node scripts/start.js",
+    "start": "nodemon server",
+    "start-prod": "nodemon server",
     "start-admin": "node scripts/start-admin.js",
     "build": "node scripts/build.js",
     "build-admin": "node scripts/build-admin.js",
