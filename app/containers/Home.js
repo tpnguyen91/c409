@@ -1202,16 +1202,7 @@ class App extends Component {
                   </div>
                 </div>
               </div>
-              <div className="col-md-3">
-                <div className="feature-box feature-box-style-6">
-                  <div className="feature-box-icon">
-                    <i className="fa fa-check text-color-primary"></i>
-                  </div>
-                  <div className="feature-box-info">
-                    <h4 className="pt-xs"><strong className="semi-bold">Bootstrap 3+</strong></h4>
-                  </div>
-                </div>
-              </div>
+            
               <div className="col-md-3">
                 <div className="feature-box feature-box-style-6">
                   <div className="feature-box-icon">
