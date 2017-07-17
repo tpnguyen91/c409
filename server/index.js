@@ -11,15 +11,14 @@ const Crawler = require('./controllers/crawler');
 app.use(express.static(path.join(__dirname, '../build/')));
 app.use(express.static(path.join(__dirname, '../public/')));
 
-app.get('/crawler', Crawler.index);
-app.get('/crawler/fetch', Crawler.fetch);
+// app.get('/crawler', Crawler.index);
+// app.get('/crawler/fetch', Crawler.fetch);
 
 if (isDeveloping) {
   const config = require('../config/webpack.config.dev.js');
   const webpack = require('webpack');
   const webpackMiddleware = require('webpack-dev-middleware');
   const webpackHotMiddleware = require('webpack-hot-middleware');
-
   const compiler = webpack(config);
   const middleware = webpackMiddleware(compiler, {
     publicPath: config.output.publicPath,
@@ -33,7 +32,6 @@ if (isDeveloping) {
       modules: false
     }
   });
-
   app.use(middleware);
   app.use(webpackHotMiddleware(compiler));
   app.get('*', function response(req, res) {

@@ -1,7 +1,8 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Router, Route, IndexRoute, browserHistory } from "react-router";
-import Home from './containers/Home';
+import Home from './components/Home';
+import Merchant from './components/Merchant';
 
 render(
   <Router history={browserHistory}>
@@ -14,6 +15,7 @@ render(
       }}
     >
       <IndexRoute component={Home} />
+      <Route path={'/dai-ly'} component={Merchant} />
     </Route>
   </Router>,
   document.getElementById('root')

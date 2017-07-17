@@ -3,6 +3,7 @@ const cheerio = require('cheerio');
 const Result = require('../models/results.js');
 
 exports.index = (req, res) => {
+  console.log('startsssssssss');
   Result.find({}, (err, data) => {
     if (!err) res.json(data);
     else res.json(err);
@@ -10,6 +11,7 @@ exports.index = (req, res) => {
 }
 
 exports.fetch = (req, res) => {
+  console.log('startsssssssss');
   const url = 'https://www.minhngoc.net.vn/';
   request(url, (error, response, html) => {
     if(!error) {

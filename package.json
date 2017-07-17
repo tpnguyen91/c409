@@ -5,6 +5,7 @@
   "dependencies": {
     "cheerio": "latest",
     "express": "latest",
+    "moment": "^2.18.1",
     "mongoose": "^4.10.8",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
