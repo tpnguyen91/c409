@@ -30,7 +30,7 @@ class App extends Component {
                   <nav className="header-nav-top">
                     <ul className="nav nav-pills">
                       <li className="hidden-xs">
-                        <a href="contact-us.html"><i className="fa fa-angle-right"></i> Liên hệ</a>
+                        <a href="contact-us.html"><i className="fa fa-angle-right"></i> Liên hệ 111</a>
                       </li>
                       <li>
                         <span className="ws-nowrap"><i className="fa fa-phone"></i> (123) 456-789</span>
