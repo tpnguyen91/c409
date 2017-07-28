@@ -1,5 +1,3 @@
-'use strict';
-
 const autoprefixer = require('autoprefixer');
 const path = require('path');
 const webpack = require('webpack');
@@ -17,7 +15,6 @@ const env = getClientEnvironment(publicUrl);
 module.exports = {
   devtool: 'cheap-module-source-map',
   entry: [
-    require.resolve('react-dev-utils/webpackHotDevClient'),
     require.resolve('./polyfills'),
     require.resolve('react-error-overlay'),
     paths.appAdminIndexJs,

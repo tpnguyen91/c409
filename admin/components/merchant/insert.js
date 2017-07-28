@@ -1,9 +1,46 @@
 import React, { Component } from 'react';
+import superagent from 'superagent';
+import { withRouter } from 'react-router';
 import './styles.css'
 
-export default class MerchantInsert extends Component {
+class MerchantInsert extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      error: null,
+      agency: {
+        name: '',
+        phone: '',
+        address: '',
+        email: '',
+      },
+    };
+
+    this.onSubmit = this.onSubmit.bind(this);
+    this.onChange = this.onChange.bind(this);
+  }
+
+  onSubmit(e) {
+    e.preventDefault();
+    superagent
+      .post('/api/v1/agency')
+      .send({ agency: this.state.agency })
+      .end((err, res) => {
+        if (!err) this.props.router.push('/dai-ly')
+      })
+  }
+
+  onChange(e) {
+    const { name, value } = e.target;
+    const { agency = {} } = this.state;
+    if (name === 'phone' && value) agency.phone = value.replace(/\D/g, '');
+    else agency[name] = value;
+    this.setState({ agency });
+  }
 
   render() {
+    const { name = '', email = '', phone = '', address = '' } = this.state.agency || {};
+
     return (
       <div className="row">
         <div className="col-md-12 col-sm-12 col-xs-12">
@@ -14,33 +51,37 @@ export default class MerchantInsert extends Component {
             </div>
             <div className="x_content">
               <br />
-              <form id="demo-form2" data-parsley-validate className="form-horizontal form-label-left">
+              <form
+                data-parsley-validate
+                onSubmit={this.onSubmit}
+                className="form-horizontal form-label-left"
+              >
                 <div className="form-group">
-                  <label className="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Tên Đại Lý <span className="required">*</span>
+                  <label className="control-label col-md-3 col-sm-3 col-xs-12" htmlFor="first-name">Tên Đại Lý <span className="required">*</span>
                   </label>
                   <div className="col-md-6 col-sm-6 col-xs-12">
-                    <input type="text" id="first-name" required="required" className="form-control col-md-7 col-xs-12" />
+                    <input value={name} name="name" required className="form-control col-md-7 col-xs-12" onChange={this.onChange} />
                   </div>
                 </div>
                 <div className="form-group">
-                  <label className="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Số điện thoại <span className="required">*</span>
+                  <label className="control-label col-md-3 col-sm-3 col-xs-12" htmlFor="last-name">Số điện thoại <span className="required">*</span>
                   </label>
                   <div className="col-md-6 col-sm-6 col-xs-12">
-                    <input type="text" id="last-name" name="last-name" required="required" className="form-control col-md-7 col-xs-12" />
+                    <input value={phone} name="phone" required className="form-control col-md-7 col-xs-12" onChange={this.onChange} />
                   </div>
                 </div>
                 <div className="form-group">
-                  <label className="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Địa chỉ <span className="required">*</span>
+                  <label className="control-label col-md-3 col-sm-3 col-xs-12" htmlFor="last-name">Email <span className="required">*</span>
                   </label>
                   <div className="col-md-6 col-sm-6 col-xs-12">
-                    <input type="text" id="last-name" name="last-name" required="required" className="form-control col-md-7 col-xs-12" />
+                    <input type="email" value={email} name="email" required className="form-control col-md-7 col-xs-12" onChange={this.onChange} />
                   </div>
                 </div>
                 <div className="form-group">
-                  <label className="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Hình ảnh đại diện <span className="required"></span>
+                  <label className="control-label col-md-3 col-sm-3 col-xs-12" htmlFor="last-name">Địa chỉ <span className="required">*</span>
                   </label>
                   <div className="col-md-6 col-sm-6 col-xs-12">
-                    <input type="file" id="last-name" name="last-name" required="required" className="form-control col-md-7 col-xs-12" />
+                    <input value={address} name="address" required className="form-control col-md-7 col-xs-12" onChange={this.onChange}/>
                   </div>
                 </div>
                 <div className="ln_solid"></div>
@@ -59,3 +100,5 @@ export default class MerchantInsert extends Component {
     );
   }
 }
+
+export default withRouter(MerchantInsert);

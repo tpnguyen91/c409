@@ -1,7 +1,36 @@
 import React, { Component } from 'react';
+import superagent from 'superagent';
+import ReactPaginate from 'react-paginate';
+
 import './styles.css'
 
 export default class Merchant extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      limit: 10,
+      current: 0,
+      agencies: []
+    };
+
+    this.onPageChange = this.onPageChange.bind(this)
+  }
+
+  componentWillMount() {
+    const { limit } = this.state;
+    superagent
+    .get('/api/v1/agency')
+    .end((err, res) => {
+      const agencies = (res.body || {}).agencies || [];
+      const page = Math.ceil(agencies.length / limit);
+      this.setState({ agencies, page });
+    })
+  }
+
+  onPageChange({selected: current}) {
+    this.setState({ current });
+  }
 
   renderChonDanhMuc() {
     return (
@@ -14,6 +43,9 @@ export default class Merchant extends Component {
   }
 
   renderDanhMucCon() {
+    const { agencies = [], limit, current = 0 } = this.state;
+    const newAgencies = [...agencies].splice(current * limit, limit);
+
     return (
       <table className="table table-striped jambo_table bulk_action">
         <thead>
@@ -21,38 +53,52 @@ export default class Merchant extends Component {
             <th>
               <input type="checkbox" id="check-all" className="flat" />
             </th>
-            <th className="column-title">Hình đại diện</th>
             <th className="column-title">Tên Đại Lý </th>
             <th className="column-title">Điện Thoại </th>
+            <th className="column-title">Email</th>
             <th className="column-title">Địa Chỉ </th>
           </tr>
         </thead>
         <tbody>
-          <tr className="even pointer">
-            <td className="a-center ">
-              <input type="checkbox" className="flat" name="table_records" />
-            </td>
-            <td className=" ">121000040</td>
-            <td className=" ">May 23, 2014 11:47:56 PM </td>
-            <td className=" ">121000210 <i className="success fa fa-long-arrow-up"></i></td>
-            <td className=" ">John Blank L</td>
-          </tr>
-          <tr className="odd pointer">
-            <td className="a-center ">
-              <input type="checkbox" className="flat" name="table_records" />
-            </td>
-            <td className=" ">121000039</td>
-            <td className=" ">May 23, 2014 11:30:12 PM</td>
-            <td className=" ">121000208 <i className="success fa fa-long-arrow-up"></i>
-            </td>
-            <td className=" ">John Blank L</td>
-          </tr>
+          {newAgencies.map(({ _id: id, name, address, phone, email }) => (
+            <tr className="even pointer" key={id}>
+              <td className="a-center ">
+                <input type="checkbox" className="flat" name="table_records" value={id} />
+              </td>
+              <td className=" ">{name}</td>
+              <td className=" ">{phone}</td>
+              <td className=" ">{email}</td>
+              <td className=" ">{address}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
     );
   }
 
+  renderPaginate() {
+    const { page, current } = this.state;
+    if (page === 0) return null;
+
+    return (
+      <ReactPaginate
+        previousLabel={"previous"}
+        nextLabel={"next"}
+        breakLabel={<span>...</span>}
+        pageCount={page}
+        marginPagesDisplayed={2}
+        pageRangeDisplayed={5}
+        initialPage={current}
+        onPageChange={this.onPageChange}
+        containerClassName={"pagination"}
+        subContainerClassName={"pages paginate_button"}
+        activeClassName={"active"}
+      />
+    );
+  }
+
   render() {
+
     return (
         <div className="row">
           <div className="col-md-12 col-sm-12 col-xs-12">
@@ -69,20 +115,8 @@ export default class Merchant extends Component {
                   {this.renderDanhMucCon()}
                 </div>
               </div>
-              <div>
-                  <div className="dataTables_info" id="datatable_info" role="status" aria-live="polite">Showing 41 to 50 of 57 entries</div>
-                  <div className="dataTables_paginate paging_simple_numbers" id="datatable_paginate">
-                    <ul className="pagination">
-                      <li className="paginate_button previous" id="datatable_previous"><a href="#" aria-controls="datatable" data-dt-idx="0" tabindex="0">Previous</a></li>
-                      <li className="paginate_button "><a href="#" aria-controls="datatable" data-dt-idx="1" tabindex="0">1</a></li>
-                      <li className="paginate_button "><a href="#" aria-controls="datatable" data-dt-idx="2" tabindex="0">2</a></li>
-                      <li className="paginate_button "><a href="#" aria-controls="datatable" data-dt-idx="3" tabindex="0">3</a></li>
-                      <li className="paginate_button "><a href="#" aria-controls="datatable" data-dt-idx="4" tabindex="0">4</a></li>
-                      <li className="paginate_button active"><a href="#" aria-controls="datatable" data-dt-idx="5" tabindex="0">5</a></li>
-                      <li className="paginate_button "><a href="#" aria-controls="datatable" data-dt-idx="6" tabindex="0">6</a></li>
-                      <li className="paginate_button next" id="datatable_next"><a href="#" aria-controls="datatable" data-dt-idx="7" tabindex="0">Next</a></li>
-                    </ul>
-                </div>
+              <div className="dataTables_paginate paging_simple_numbers" id="datatable_paginate">
+                {this.renderPaginate()}
               </div>
             </div>
           </div>
