@@ -13,8 +13,10 @@ const publicPath = '/';
 const publicUrl = '';
 const env = getClientEnvironment(publicUrl);
 module.exports = {
-  devtool: 'cheap-module-source-map',
+  devtool: 'cheap-module-eval-source-map',
   entry: [
+    'eventsource-polyfill', // Necessary for hot reloading with IE
+    'webpack-hot-middleware/client?reload=true',
     require.resolve('./polyfills'),
     require.resolve('react-error-overlay'),
     paths.appAdminIndexJs,

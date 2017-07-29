@@ -1,4 +1,3 @@
-const http = require ('http');
 const mongoose = require ("mongoose");
 const uristring = process.env.MONGODB_URI || 'mongodb://localhost/lottery-git';
 const agencies = require('./agencies');

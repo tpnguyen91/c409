@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import superagent from 'superagent';
+import { withRouter, Link } from 'react-router';
 import ReactPaginate from 'react-paginate';
 
 import './styles.css'
 
-export default class Merchant extends Component {
+class Merchant extends Component {
   constructor(props) {
     super(props);
 
@@ -57,6 +58,7 @@ export default class Merchant extends Component {
             <th className="column-title">Điện Thoại </th>
             <th className="column-title">Email</th>
             <th className="column-title">Địa Chỉ </th>
+            <th className="column-title"></th>
           </tr>
         </thead>
         <tbody>
@@ -69,6 +71,7 @@ export default class Merchant extends Component {
               <td className=" ">{phone}</td>
               <td className=" ">{email}</td>
               <td className=" ">{address}</td>
+              <td className=" "><Link to={`/dai-ly/${id}/nhap-du-lieu`}>Nhập số đã bán</Link></td>
             </tr>
           ))}
         </tbody>
@@ -124,3 +127,5 @@ export default class Merchant extends Component {
     );
   }
 }
+
+export default withRouter(Merchant)

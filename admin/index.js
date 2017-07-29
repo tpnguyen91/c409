@@ -11,6 +11,7 @@ import User from './components/user';
 import Order from './components/order';
 import Merchant from './components/merchant';
 import MerchantAddNew from './components/merchant/insert';
+import MerchantImport from './components/merchant/import';
 import CommonAddNew from './components/common/insert';
 
 
@@ -27,6 +28,7 @@ render(
       <Route path={'/order'} component={Order} />
       <Route path={'/dai-ly'} component={Merchant} />
       <Route path={'/dai-ly/tao-moi'} component={MerchantAddNew} />
+      <Route path={'/dai-ly/:id/nhap-du-lieu'} component={MerchantImport} />
       <Route path={'/common/new'} component={CommonAddNew} />
       <Route path={'/common/:id'} component={CommonAddNew} />
     </Route>

@@ -29,16 +29,11 @@ if (isDeveloping) {
   const webpackHotMiddleware = require('webpack-hot-middleware');
   const compiler = webpack(config);
   const middleware = webpackMiddleware(compiler, {
+    noInfo: true,
+    silent: true,
+    stats: 'errors-only',
     publicPath: config.output.publicPath,
-    contentBase: 'admin',
-    stats: {
-      colors: true,
-      hash: false,
-      timings: true,
-      chunks: false,
-      chunkModules: false,
-      modules: false
-    }
+    contentBase: 'admin'
   });
   app.use(middleware);
   app.use(webpackHotMiddleware(compiler));
