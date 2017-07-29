@@ -5,6 +5,7 @@ import Home from './components/home';
 import News from './components/news';
 import NewsAdd from './components/news/insert';
 import ResultLottery from './components/resultLottery';
+import ResultLotteryInsert from './components/resultLottery/insert';
 import Customer from './components/customer';
 import CustomerInsert from './components/customer/insert';
 import User from './components/user';
@@ -23,6 +24,7 @@ render(
       <Route path={'/tin-tuc'} component={News} />
       <Route path={'/tin-tuc/tao-moi'} component={NewsAdd} />
       <Route path={'/kq-xs'} component={ResultLottery} />
+      <Route path={'/kq-xs/tao-moi'} component={ResultLotteryInsert} />
       <Route path={'/khach-hang'} component={Customer} />
       <Route path={'/khach-hang/tao-moi'} component={CustomerInsert} />
       <Route path={'/user'} component={User} />

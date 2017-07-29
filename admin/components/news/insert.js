@@ -1,7 +1,21 @@
 import React, { Component } from 'react';
 import './styles.css'
+var CKEditor = require('react-ckeditor-wrapper');
+
 
 export default class NewsInsert extends Component {
+
+  constructor(props) {
+        super(props);
+        this.state = {
+        content: 'content',
+        }
+    }
+
+    updateContent(value) {
+        this.setState({content:value})
+    }
+
 
   render() {
     return (
@@ -15,20 +29,22 @@ export default class NewsInsert extends Component {
             <div className="x_content">
               <br />
               <form id="demo-form2" data-parsley-validate className="form-horizontal form-label-left">
-                <div className="form-group">
-                  <label className="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Tiêu đề <span className="required">*</span>
-                  </label>
-                  <div className="col-md-6 col-sm-6 col-xs-12">
-                    <input type="text" id="first-name" required="required" className="form-control col-md-7 col-xs-12" />
-                  </div>
+              <div className="row">
+                <div className="col-md-6 col-sm-12 form-group">
+                  <label htmlFor="ex3">Email address</label>
+                  <input type="text" id="ex3" className="form-control" placeholder=" " />
                 </div>
-                <div className="form-group">
-                  <label className="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Nội dung <span className="required">*</span>
-                  </label>
-                  <div className="col-md-6 col-sm-6 col-xs-12">
-                    <input type="text" id="last-name" name="last-name" required="required" className="form-control col-md-7 col-xs-12" />
-                  </div>
+              </div>
+              <div className="row">
+                <div className="col-md-6 col-sm-12 form-group">
+                  <label htmlFor="ex3">Email address</label>
+                  <input type="text" id="ex3" className="form-control" placeholder=" " />
                 </div>
+              </div>
+              <CKEditor
+                value={this.state.content}
+                onChange={this.updateContent.bind(this)}
+              />
                 <div className="ln_solid"></div>
                 <div className="form-group">
                   <div className="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">

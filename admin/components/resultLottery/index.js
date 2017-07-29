@@ -6,13 +6,9 @@ export default class ResultLottery extends Component {
   renderChonDanhMuc() {
     return (
       <div>
-        <select className="form-control customDropdown">
-          <option>Chọn Danh Mục</option>
-          <option>Danh Mục các nhà đài</option>
-        </select>
-        <button type="button" className="btn btn-danger customBtnAddNew">Xoá</button>
-        <button type="button" className="btn btn-primary customBtnAddNew">Chỉnh sửa</button>
-        <button type="button" className="btn btn-success customBtnAddNew">Tạo mới</button>
+        <a className="btn btn-danger customBtnAddNew">Xoá</a>
+        <a className="btn btn-primary customBtnAddNew">Chỉnh sửa</a>
+        <a href="/kq-xs/tao-moi" className="btn btn-success customBtnAddNew">Nhập DS số bán</a>
       </div>
     );
   }
@@ -25,12 +21,9 @@ export default class ResultLottery extends Component {
             <th>
               <input type="checkbox" id="check-all" className="flat" />
             </th>
-            <th className="column-title">Invoice </th>
-            <th className="column-title">Invoice Date </th>
-            <th className="column-title">Order </th>
-            <th className="column-title">Bill to Name </th>
-            <th className="column-title">Status </th>
-            <th className="column-title">Amount </th>
+            <th className="column-title">Số</th>
+            <th className="column-title">Loại Số</th>
+            <th className="column-title">Số người trúng </th>
           </tr>
         </thead>
         <tbody>
@@ -41,9 +34,6 @@ export default class ResultLottery extends Component {
             <td className=" ">121000040</td>
             <td className=" ">May 23, 2014 11:47:56 PM </td>
             <td className=" ">121000210 <i className="success fa fa-long-arrow-up"></i></td>
-            <td className=" ">John Blank L</td>
-            <td className=" ">Paid</td>
-            <td className="a-right a-right ">$7.45</td>
           </tr>
           <tr className="odd pointer">
             <td className="a-center ">
@@ -53,9 +43,6 @@ export default class ResultLottery extends Component {
             <td className=" ">May 23, 2014 11:30:12 PM</td>
             <td className=" ">121000208 <i className="success fa fa-long-arrow-up"></i>
             </td>
-            <td className=" ">John Blank L</td>
-            <td className=" ">Paid</td>
-            <td className="a-right a-right ">$741.20</td>
           </tr>
         </tbody>
       </table>
@@ -84,14 +71,30 @@ export default class ResultLottery extends Component {
                   <div className="dataTables_info" id="datatable_info" role="status" aria-live="polite">Showing 41 to 50 of 57 entries</div>
                   <div className="dataTables_paginate paging_simple_numbers" id="datatable_paginate">
                     <ul className="pagination">
-                      <li className="paginate_button previous" id="datatable_previous"><a href="#" aria-controls="datatable" data-dt-idx="0" tabindex="0">Previous</a></li>
-                      <li className="paginate_button "><a href="#" aria-controls="datatable" data-dt-idx="1" tabindex="0">1</a></li>
-                      <li className="paginate_button "><a href="#" aria-controls="datatable" data-dt-idx="2" tabindex="0">2</a></li>
-                      <li className="paginate_button "><a href="#" aria-controls="datatable" data-dt-idx="3" tabindex="0">3</a></li>
-                      <li className="paginate_button "><a href="#" aria-controls="datatable" data-dt-idx="4" tabindex="0">4</a></li>
-                      <li className="paginate_button active"><a href="#" aria-controls="datatable" data-dt-idx="5" tabindex="0">5</a></li>
-                      <li className="paginate_button "><a href="#" aria-controls="datatable" data-dt-idx="6" tabindex="0">6</a></li>
-                      <li className="paginate_button next" id="datatable_next"><a href="#" aria-controls="datatable" data-dt-idx="7" tabindex="0">Next</a></li>
+                      <li className="paginate_button previous" id="datatable_previous">
+                        <a href="#" aria-controls="datatable" data-dt-idx="0" tabindex="0">Previous</a>
+                      </li>
+                      <li className="paginate_button ">
+                        <a href="#" aria-controls="datatable" data-dt-idx="1" tabindex="0">1</a>
+                      </li>
+                      <li className="paginate_button ">
+                        <a href="#" aria-controls="datatable" data-dt-idx="2" tabindex="0">2</a>
+                      </li>
+                      <li className="paginate_button ">
+                        <a href="#" aria-controls="datatable" data-dt-idx="3" tabindex="0">3</a>
+                      </li>
+                      <li className="paginate_button ">
+                        <a href="#" aria-controls="datatable" data-dt-idx="4" tabindex="0">4</a>
+                      </li>
+                      <li className="paginate_button active">
+                        <a href="#" aria-controls="datatable" data-dt-idx="5" tabindex="0">5</a>
+                      </li>
+                      <li className="paginate_button ">
+                        <a href="#" aria-controls="datatable" data-dt-idx="6" tabindex="0">6</a>
+                      </li>
+                      <li className="paginate_button next" id="datatable_next">
+                        <a href="#" aria-controls="datatable" data-dt-idx="7" tabindex="0">Next</a>
+                      </li>
                     </ul>
                 </div>
               </div>

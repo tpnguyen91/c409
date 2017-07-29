@@ -18,4 +18,4 @@ var newSchema = new Schema({
   timestamps: true
 });
 
-module.exports =  mongoose.model('News', newSchema);
+export default mongoose.model('News', newSchema);
