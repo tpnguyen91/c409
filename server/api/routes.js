@@ -6,6 +6,7 @@ const AwardV1 = require('./v1/award')
 const router = express.Router()
 
 router.get('/agency', AgencyV1.index)
+router.get('/agency/:_id', AgencyV1.getById)
 router.post('/agency', AgencyV1.create)
 router.put('/agency/:_id', AgencyV1.update)
 router.delete('/agency/:_id', AgencyV1.delete)

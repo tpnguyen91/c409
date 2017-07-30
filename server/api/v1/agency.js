@@ -43,6 +43,13 @@ class Agency {
       .then((rs) => res.json({ success: rs, agency: rs }))
       .catch((error) => res.json({ success: false, error }))
   }
+
+  getById(req, res) {
+     const { _id } = req.params
+     Model.agencies.findOne({ _id })
+      .then((rs) => res.json({ success: rs, agency: rs }))
+      .catch((error) => res.json({ success: false, error }))
+  }
 }
 
 module.exports = new Agency()

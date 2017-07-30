@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import superagent from 'superagent';
 import { withRouter, Link } from 'react-router';
 import ReactPaginate from 'react-paginate';
+import ReactConfirmAlert, { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css' // Import css
+var Spinner = require('react-spinkit');
+
 
 import './styles.css'
 
@@ -10,23 +14,68 @@ class Merchant extends Component {
     super(props);
 
     this.state = {
-      limit: 10,
+      limit: 5,
       current: 0,
-      agencies: []
+      agencies: [],
+      id: '',
+      isShowLoading: false,
     };
 
-    this.onPageChange = this.onPageChange.bind(this)
+    this.onPageChange = this.onPageChange.bind(this);
+    this.onGoToEditPage = this.onGoToEditPage.bind(this);
   }
 
-  componentWillMount() {
-    const { limit } = this.state;
-    superagent
-    .get('/api/v1/agency')
-    .end((err, res) => {
-      const agencies = (res.body || {}).agencies || [];
-      const page = Math.ceil(agencies.length / limit);
-      this.setState({ agencies, page });
+   alertDialog(id) {
+    confirmAlert({
+      title: 'Xác nhận',                        // Title dialog
+      message: 'Bạn có mún xoá Đại lý này?',               // Message dialog
+      childrenElement: () => <div></div>,       // Custom UI or Component
+      confirmLabel: 'Đồng ý',                           // Text button confirm
+      cancelLabel: 'Huỷ',                             // Text button cancel
+      onConfirm: () => this.onRemove(id),    // Action after Confirm
+      onCancel: () => console.log('Action after Cancel'),      // Action after Cancel
     })
+  };
+
+  componentWillMount() {
+    this.fetchList();
+  }
+
+  fetchList() {
+    const { limit } = this.state;
+     this.setState({
+      isShowLoading: true,
+    })
+    superagent
+      .get('/api/v1/agency')
+      .end((err, res) => {
+        this.setState({
+          isShowLoading: false,
+        })
+        const agencies = (res.body || {}).agencies || [];
+        const page = Math.ceil(agencies.length / limit);
+        this.setState({ agencies, page });
+      })
+    }
+
+  onRemove(id) {
+    this.setState({
+      isShowLoading: true,
+    });
+    superagent
+    .delete('/api/v1/agency/' + id)
+    .end((err, res) => {
+      this.setState({
+        isShowLoading: false,
+      });
+      if(!err) {
+       this.fetchList();
+      }
+    });
+  }
+
+  onGoToEditPage() {
+    this.props.router.push('/dai-ly/cap-nhat');
   }
 
   onPageChange({selected: current}) {
@@ -34,11 +83,10 @@ class Merchant extends Component {
   }
 
   renderChonDanhMuc() {
+    const urlEdit = '/dai-ly/' + this.state.id;
     return (
       <div>
-        <a className="btn btn-danger customBtnAddNew">Xoá</a>
-        <a className="btn btn-primary customBtnAddNew">Chỉnh sửa</a>
-        <a className="btn btn-success customBtnAddNew" href='/dai-ly/tao-moi'>Tạo mới</a>
+        <a className="btn btn-success btn-lg customBtnAddNew" href='/dai-ly/tao-moi'>Tạo mới</a>
       </div>
     );
   }
@@ -64,7 +112,7 @@ class Merchant extends Component {
         <tbody>
           {newAgencies.map(({ _id: id, name, address, phone, email }) => (
             <tr className="even pointer" key={id}>
-              <td className="a-center ">
+              <td className="a-center " style={{ verticalAlign: 'middle' }} >
                 <input type="checkbox" className="flat" name="table_records" value={id} />
               </td>
               <td className=" ">{name}</td>
@@ -72,6 +120,10 @@ class Merchant extends Component {
               <td className=" ">{email}</td>
               <td className=" ">{address}</td>
               <td className=" "><Link to={`/dai-ly/${id}/nhap-du-lieu`}>Nhập số đã bán</Link></td>
+              <td>
+                <a className="btn btn-app" style={{ minWidth: 50, height: 50 }} href={'/dai-ly/' + id}><i className="fa fa-pencil-square"></i></a>
+                <a className="btn btn-app" style={{ minWidth: 50, height: 50 }} onClick={() => this.alertDialog(id)} ><i className="fa fa-close"></i></a>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -100,8 +152,17 @@ class Merchant extends Component {
     );
   }
 
-  render() {
+  overLoading() {
+    return (
+      <div className='overlay'>
+        <Spinner name="ball-grid-pulse" color="orange"/>
+      </div>
+    );
+  }
 
+
+  render() {
+    const { isShowLoading } = this.state;
     return (
         <div className="row">
           <div className="col-md-12 col-sm-12 col-xs-12">
@@ -123,6 +184,7 @@ class Merchant extends Component {
               </div>
             </div>
           </div>
+          { isShowLoading? this.overLoading() : null}
         </div>
     );
   }

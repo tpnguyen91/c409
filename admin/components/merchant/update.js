@@ -3,12 +3,13 @@ import superagent from 'superagent';
 import { withRouter } from 'react-router';
 import './styles.css'
 
-class MerchantInsert extends Component {
+class MerchantUpdate extends Component {
   constructor(props) {
     super(props);
     this.state = {
       error: null,
       agency: {
+        _id: '',
         name: '',
         phone: '',
         address: '',
@@ -18,15 +19,25 @@ class MerchantInsert extends Component {
 
     this.onSubmit = this.onSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
-    this.onReset = this.onReset.bind(this);
     this.onCancel = this.onCancel.bind(this);
+  }
+
+  componentWillMount() {
+     superagent
+      .get('/api/v1/agency/' + this.props.params.id)
+      .end((err, res) => {
+        if (!err)
+          this.setState({
+            agency: res.body.agency,
+          })
+      })
   }
 
 
   onSubmit(e) {
     e.preventDefault();
     superagent
-      .post('/api/v1/agency')
+      .put('/api/v1/agency/' + this.props.params.id)
       .send({ agency: this.state.agency })
       .end((err, res) => {
         if (!err) this.props.router.push('/dai-ly')
@@ -35,17 +46,6 @@ class MerchantInsert extends Component {
 
   onCancel() {
     this.props.router.push('/dai-ly');
-  }
-
-  onReset() {
-    this.setState({
-      agency: {
-        name: '',
-        phone: '',
-        address: '',
-        email: '',
-      },
-    })
   }
 
   onChange(e) {
@@ -64,7 +64,7 @@ class MerchantInsert extends Component {
         <div className="col-md-12 col-sm-12 col-xs-12">
           <div className="x_panel">
             <div className="x_title">
-              <h2>Thêm mới Đại Lý</h2>
+              <h2>Cập nhật thông tin Đại Lý</h2>
               <div className="clearfix"></div>
             </div>
             <div className="x_content">
@@ -107,7 +107,6 @@ class MerchantInsert extends Component {
                   <div className="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                     <button onClick={this.onCancel} className="btn btn-primary" type="button">Huỷ</button>
                     <button type="submit" className="btn btn-success">Lưu lại</button>
-                    <button onClick={this.onReset} className="btn btn-primary" type="reset">Làm mới</button>
                   </div>
                 </div>
               </form>
@@ -119,4 +118,4 @@ class MerchantInsert extends Component {
   }
 }
 
-export default withRouter(MerchantInsert);
+export default withRouter(MerchantUpdate);
