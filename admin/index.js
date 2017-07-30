@@ -9,6 +9,7 @@ import Customer from './components/customer';
 import CustomerInsert from './components/customer/insert';
 import User from './components/user';
 import Order from './components/order';
+import OrderDetail from './components/order/detail';
 import Merchant from './components/merchant';
 import MerchantAddNew from './components/merchant/insert';
 import MerchantImport from './components/merchant/import';
@@ -26,6 +27,7 @@ render(
       <Route path={'/khach-hang/tao-moi'} component={CustomerInsert} />
       <Route path={'/user'} component={User} />
       <Route path={'/order'} component={Order} />
+      <Route path={'/order/:id'} component={OrderDetail} />
       <Route path={'/dai-ly'} component={Merchant} />
       <Route path={'/dai-ly/tao-moi'} component={MerchantAddNew} />
       <Route path={'/dai-ly/:id/nhap-du-lieu'} component={MerchantImport} />

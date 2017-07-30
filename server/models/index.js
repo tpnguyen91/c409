@@ -1,5 +1,6 @@
 const mongoose = require ("mongoose");
 const uristring = process.env.MONGODB_URI || 'mongodb://localhost/lottery-git';
+const orders = require('./orders');
 const agencies = require('./agencies');
 
 // Makes connection asynchronously.  Mongoose will queue up database
@@ -13,5 +14,6 @@ mongoose.connect(uristring, (err, res) => {
 });
 
 module.exports = {
+  orders,
   agencies
 }

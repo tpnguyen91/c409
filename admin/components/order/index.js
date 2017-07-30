@@ -1,7 +1,38 @@
 import React, { Component } from 'react';
+import superagent from 'superagent';
+import { withRouter, Link } from 'react-router';
+import ReactPaginate from 'react-paginate';
+import moment from 'moment';
+
 import './styles.css'
 
-export default class Order extends Component {
+class Order extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      limit: 10,
+      current: 0,
+      orders: []
+    };
+
+    this.onPageChange = this.onPageChange.bind(this)
+  }
+
+  componentWillMount() {
+    const { limit } = this.state;
+    superagent
+    .get('/api/v1/order')
+    .end((err, res) => {
+      const orders = (res.body || {}).orders || [];
+      const page = Math.ceil(orders.length / limit);
+      this.setState({ orders, page });
+    })
+  }
+
+  onPageChange({selected: current}) {
+    this.setState({ current });
+  }
 
   renderChonDanhMuc() {
     return (
@@ -14,136 +45,40 @@ export default class Order extends Component {
   }
 
   renderDanhMucCon() {
+    const { orders = [], limit, current = 0 } = this.state;
+    const newOrders = [...orders].splice(current * limit, limit);
+
     return (
       <table className="table table-striped jambo_table bulk_action">
         <thead>
           <tr className="headings">
-            <th>
-              <input type="checkbox" id="check-all" className="flat" />
-            </th>
-            <th className="column-title">Mã ĐH </th>
-            <th className="column-title">Khách hàng </th>
-            <th className="column-title">Ngày tạo </th>
-            <th className="column-title">Số lượng </th>
-            <th className="column-title">Tổng tiền </th>
+            <td className="a-center ">
+              <input type="checkbox" className="flat" name="table_records" />
+            </td>
+            <th className="column-title">Mã ĐH</th>
+            <th className="column-title">Đại lý</th>
+            <th className="column-title">Ngày Quay</th>
+            <th className="column-title">Số lượng</th>
+            <th className="column-title">Tổng tiền</th>
             <th className="column-title"> </th>
           </tr>
         </thead>
         <tbody>
-          <tr className="even pointer">
-            <td className="a-center" style={{ verticalAlign: 'middle' }}>
-              <input type="checkbox" className="flat" name="table_records" />
-            </td>
-            <td style={{ verticalAlign: 'middle' }} >121000040</td>
-            <td style={{ verticalAlign: 'middle' }} >May 23, 2014 11:47:56 PM </td>
-            <td style={{ verticalAlign: 'middle' }} >May 23, 2014 11:47:56 PM </td>
-            <td style={{ verticalAlign: 'middle' }} >121000210 <i className="success fa fa-long-arrow-up"></i></td>
-            <td style={{ verticalAlign: 'middle' }} >John Blank L</td>
-            <td style={{ verticalAlign: 'middle' }} ><a className="btn btn-default">In</a></td>
-          </tr>
-          <tr className="odd pointer">
-            <td className="a-center tdAlign">
-              <input type="checkbox" className="flat" name="table_records" />
-            </td>
-            <td style={{ verticalAlign: 'middle' }} >121000039</td>
-            <td style={{ verticalAlign: 'middle' }} >May 23, 2014 11:30:12 PM</td>
-            <td style={{ verticalAlign: 'middle' }} >May 23, 2014 11:30:12 PM</td>
-            <td style={{ verticalAlign: 'middle' }} >121000208 <i className="success fa fa-long-arrow-up"></i>
-            </td>
-            <td style={{ verticalAlign: 'middle' }} >John Blank L</td>
-            <td style={{ verticalAlign: 'middle' }} ><a className="btn btn-default">In</a></td>
-          </tr>
+          {newOrders.map(({ _id: id, agency = {}, detail, date }) => (
+            <tr className="even pointer" key={id}>
+              <td className="a-center ">
+                <input type="checkbox" className="flat" name="table_records" value={id} />
+              </td>
+              <td className=" ">{id}</td>
+              <td className=" ">{agency.name}</td>
+              <td className=" ">{moment(date).format('DD/MM/YYYY')}</td>
+              <td className=" ">{detail.length}</td>
+              <td className=" ">{detail.reduce((total, item) => total + (item.quanlity * item.price), 0)}</td>
+              <td className=" "><Link to={`/order/${id}`}>Chi tiết</Link></td>
+            </tr>
+          ))}
         </tbody>
       </table>
-
-    );
-  }
-
-  renderThongTinKH() {
-    return (
-      <div className="col-md-6 col-xs-12">
-        <div className="x_panel">
-          <div className="x_title">
-            <h2>Thông tin Khách hàng</h2>
-            <div className="clearfix"></div>
-          </div>
-          <div className="x_content">
-            <br />
-            <form className="form-horizontal form-label-left input_mask">
-              <div className="form-group">
-                <label className="control-label col-md-3 col-sm-3 col-xs-12">Họ & Tên</label>
-                <div className="col-md-9 col-sm-9 col-xs-12">
-                  <input type="text" className="form-control" placeholder="Default Input" />
-                </div>
-              </div>
-              <div className="form-group">
-                <label className="control-label col-md-3 col-sm-3 col-xs-12">Số Điện thoại </label>
-                <div className="col-md-9 col-sm-9 col-xs-12">
-                  <input type="text" className="form-control" disabled="disabled" placeholder="Disabled Input" />
-                </div>
-              </div>
-              <div className="form-group">
-                <label className="control-label col-md-3 col-sm-3 col-xs-12">Địa chỉ</label>
-                <div className="col-md-9 col-sm-9 col-xs-12">
-                  <input type="text" className="form-control" readonly="readonly" placeholder="Read-Only Input" />
-                </div>
-              </div>
-              <div className="form-group">
-                <label className="control-label col-md-3 col-sm-3 col-xs-12">Trạng thái ĐH
-                </label>
-                <div className="col-md-9 col-sm-9 col-xs-12">
-                  <input className="date-picker form-control col-md-7 col-xs-12" required="required" type="text" />
-                </div>
-              </div>
-              <div className="ln_solid"></div>
-            </form>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  renderChiTietDonHang() {
-    return (
-      <div className="col-md-6 col-xs-12">
-        <div className="x_panel">
-          <div className="x_title">
-            <h2>Chi tiết đơn hàng</h2>
-            <div className="clearfix"></div>
-          </div>
-          <div className="x_content">
-            <br />
-            <form className="form-horizontal form-label-left input_mask">
-              <div className="form-group">
-                <label className="control-label col-md-3 col-sm-3 col-xs-12">Họ & Tên</label>
-                <div className="col-md-9 col-sm-9 col-xs-12">
-                  <input type="text" className="form-control" placeholder="Default Input" />
-                </div>
-              </div>
-              <div className="form-group">
-                <label className="control-label col-md-3 col-sm-3 col-xs-12">Số Điện thoại </label>
-                <div className="col-md-9 col-sm-9 col-xs-12">
-                  <input type="text" className="form-control" disabled="disabled" placeholder="Disabled Input" />
-                </div>
-              </div>
-              <div className="form-group">
-                <label className="control-label col-md-3 col-sm-3 col-xs-12">Địa chỉ</label>
-                <div className="col-md-9 col-sm-9 col-xs-12">
-                  <input type="text" className="form-control" readonly="readonly" placeholder="Read-Only Input" />
-                </div>
-              </div>
-              <div className="form-group">
-                <label className="control-label col-md-3 col-sm-3 col-xs-12">Trạng thái ĐH
-                </label>
-                <div className="col-md-9 col-sm-9 col-xs-12">
-                  <input className="date-picker form-control col-md-7 col-xs-12" required="required" type="text" />
-                </div>
-              </div>
-              <div className="ln_solid"></div>
-            </form>
-          </div>
-        </div>
-      </div>
     );
   }
 
@@ -163,38 +98,42 @@ export default class Order extends Component {
               {this.renderDanhMucCon()}
             </div>
           </div>
-          <div>
-              <div className="dataTables_info" id="datatable_info" role="status" aria-live="polite">Showing 41 to 50 of 57 entries</div>
-              <div className="dataTables_paginate paging_simple_numbers" id="datatable_paginate">
-                <ul className="pagination">
-                  <li className="paginate_button previous" id="datatable_previous"><a href="#" aria-controls="datatable" data-dt-idx="0" tabindex="0">Previous</a></li>
-                  <li className="paginate_button "><a href="#" aria-controls="datatable" data-dt-idx="1" tabindex="0">1</a></li>
-                  <li className="paginate_button "><a href="#" aria-controls="datatable" data-dt-idx="2" tabindex="0">2</a></li>
-                  <li className="paginate_button "><a href="#" aria-controls="datatable" data-dt-idx="3" tabindex="0">3</a></li>
-                  <li className="paginate_button "><a href="#" aria-controls="datatable" data-dt-idx="4" tabindex="0">4</a></li>
-                  <li className="paginate_button active"><a href="#" aria-controls="datatable" data-dt-idx="5" tabindex="0">5</a></li>
-                  <li className="paginate_button "><a href="#" aria-controls="datatable" data-dt-idx="6" tabindex="0">6</a></li>
-                  <li className="paginate_button next" id="datatable_next"><a href="#" aria-controls="datatable" data-dt-idx="7" tabindex="0">Next</a></li>
-                </ul>
-            </div>
+          <div className="dataTables_paginate paging_simple_numbers" id="datatable_paginate">
+            {this.renderPaginate()}
           </div>
         </div>
       </div>
     );
   }
 
+  renderPaginate() {
+    const { page, current } = this.state;
+    if (page === 0) return null;
+
+    return (
+      <ReactPaginate
+        previousLabel={"previous"}
+        nextLabel={"next"}
+        breakLabel={<span>...</span>}
+        pageCount={page}
+        marginPagesDisplayed={2}
+        pageRangeDisplayed={5}
+        initialPage={current}
+        onPageChange={this.onPageChange}
+        containerClassName={"pagination"}
+        subContainerClassName={"pages paginate_button"}
+        activeClassName={"active"}
+      />
+    );
+  }
 
   render() {
     return (
-      <div>
-        <div className="row">
-          {this.renderDanhSachDonHang()}
-        </div>
-        <div className="row">
-          {this.renderThongTinKH()}
-          {this.renderChiTietDonHang()}
-        </div>
+      <div className="row">
+        {this.renderDanhSachDonHang()}
       </div>
     );
   }
 }
+
+export default withRouter(Order)

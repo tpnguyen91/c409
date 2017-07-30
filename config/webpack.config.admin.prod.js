@@ -158,6 +158,12 @@ module.exports = {
         minifyURLs: true,
       },
     }),
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery',
+      'window.$': 'jquery',
+      'window.jQuery': 'jquery',
+    }),
     new webpack.DefinePlugin(env.stringified),
     new webpack.optimize.UglifyJsPlugin({
       compress: {

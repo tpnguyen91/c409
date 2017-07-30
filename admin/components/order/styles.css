@@ -11,3 +11,8 @@
 .tdAlign {
   vertical-align: middle;
 }
+
+.x_title {
+  float: left;
+  width: 100%;
+}

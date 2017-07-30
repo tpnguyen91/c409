@@ -2,28 +2,58 @@ import React, { Component } from 'react';
 import superagent from 'superagent';
 import { withRouter } from 'react-router';
 import XLSX from 'xlsx';
+import moment from 'moment';
+import DatePicker from 'react-datepicker';
 
+import 'react-datepicker/dist/react-datepicker.css';
 import './styles.css'
 
 class Import extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      agency: {},
+      current: moment(),
       name: null,
       dataSource: [],
     };
+    this.onSubmit = this.onSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
+    this.onChangeDate = this.onChangeDate.bind(this);
     this.renderDataImport = this.renderDataImport.bind(this);
+  }
+
+  onChangeDate(current) {
+    this.setState({ current })
   }
 
   onSubmit(e) {
     e.preventDefault();
+    const { params } = this.props;
+    const { current, dataSource } = this.state;
+    const order = {
+      date: current.toISOString(),
+      agency: params.id,
+      details: []
+    };
+
+    dataSource.forEach((sheet) => {
+      sheet.dataSource.forEach((item) => {
+        order.details.push({
+          number: item.C,
+          quanlity: item.D,
+          price: item.F,
+          type: item.E,
+          provinceCode: item.B,
+          releaseBy: item.A,
+        })
+      })
+    })
+
     superagent
-      .post('/api/v1/agency')
-      .send({ agency: this.state.agency })
+      .post('/api/v1/order')
+      .send({ order })
       .end((err, res) => {
-        if (!err) this.props.router.push('/dai-ly')
+        if (!err) this.props.router.push(`/order/${res.body.order._id}`)
       })
   }
 
@@ -43,7 +73,7 @@ class Import extends Component {
 
     reader.onload = (rs) => {
       const workbook = XLSX.read(rs.target.result, {type: 'binary'});
-      const dataSource = Object.entries(workbook.Sheets).map(([name, ws]) => ({ name, dataSource: XLSX.utils.sheet_to_json(ws, { header: "A" }) }));
+      const dataSource = Object.entries(workbook.Sheets).map(([name, ws]) => ({ name, dataSource: XLSX.utils.sheet_to_json(ws, { header: 'A', range: 4 }) }));
       this.setState({ fileName, dataSource });
     }
 
@@ -95,6 +125,8 @@ class Import extends Component {
   }
 
   render() {
+    const { current } = this.state;
+
     return (
       <div className="row">
         <div className="col-md-12 col-sm-12 col-xs-12">
@@ -111,10 +143,10 @@ class Import extends Component {
                 className="form-horizontal form-label-left"
               >
                 <div className="form-group">
-                  <label className="control-label col-md-3 col-sm-3 col-xs-12" htmlFor="start-line">Dòng bắt đầu<span className="required">*</span>
+                  <label className="control-label col-md-3 col-sm-3 col-xs-12" htmlFor="datepicker-select-date">Chọn ngày<span className="required">*</span>
                   </label>
                   <div className="col-md-6 col-sm-6 col-xs-12">
-                    <input defaultValue="1" name="start" id="start-line" required className="form-control col-md-7 col-xs-12" onChange={this.onChange} />
+                    <DatePicker selected={current} className="form-control" onChange={this.onChangeDate} />
                   </div>
                 </div>
                 <div className="form-group">
