@@ -1,7 +1,10 @@
 const mongoose = require ("mongoose");
 const uristring = process.env.MONGODB_URI || 'mongodb://localhost/lottery-git';
 const orders = require('./orders');
+const awards = require('./awards');
 const agencies = require('./agencies');
+const provinces = require('./provinces');
+const seed = require('../seed/tinh.json');
 
 // Makes connection asynchronously.  Mongoose will queue up database
 // operations and release them when the connection is complete.
@@ -13,7 +16,19 @@ mongoose.connect(uristring, (err, res) => {
   }
 });
 
+provinces.find({})
+  .then((res) => {
+    console.log('province checking...');
+    if (res.length === 0) {
+      seed.forEach((item) => {
+        provinces.create(item)
+      })
+    }
+  })
+
 module.exports = {
   orders,
-  agencies
+  awards,
+  agencies,
+  provinces
 }

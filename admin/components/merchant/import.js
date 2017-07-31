@@ -31,7 +31,7 @@ class Import extends Component {
     const { params } = this.props;
     const { current, dataSource } = this.state;
     const order = {
-      date: current.toISOString(),
+      date: moment(current.format('DD/MM/YYYY'), 'DD/MM/YYYY').toISOString(),
       agency: params.id,
       details: []
     };
