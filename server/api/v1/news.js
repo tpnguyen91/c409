@@ -1,8 +1,8 @@
-const Model = require('../../models');
-const fields = ['title', 'content','category','image_url','tags', 'keywords', 'description', 'createdBy'];
+const Model = require('../../models')
+const fields = ['title', 'content','excerpt' ,'category','image_url','tags', 'keywords', 'description', 'createdBy']
 class News {
-
   index(req, res) {
+    console.log('abc' + Model);
     Model.news.find({})
       .sort({ createdAt: 'desc' })
       .then((news) => res.json({ success: true, news }))
@@ -12,21 +12,22 @@ class News {
   create(req, res) {
     const { news = {} } = req.body || {};
     const params = fields.reduce((obj, key) => news[key] ? ({...obj, [key]: news[key]}) : obj, {});
-
     const newNews = new Model.news(params);
     newNews.save()
       .then((rs) => res.json({ success: true, news: rs }))
       .catch((error) => res.json({ success: false, error }))
   }
 
-  upadte(req, res) {
+  update(req, res) {
     const { _id } = req.params
+
     Model.news.findOne({ _id })
       .then((rs) => {
         const { news = {} } = req.body || {};
         fields.forEach((key) => {
           if (news[key]) rs[key] = news[key]
         })
+
         return rs.save()
       })
       .then((rs) => res.json({ success: true, news: rs }))
@@ -48,7 +49,6 @@ class News {
       .then((rs) => res.json({ success: rs, news: rs }))
       .catch((error) => res.json({ success: false, error }))
   }
-
 }
 
 module.exports = new News()

@@ -4,20 +4,29 @@ import './styles.css'
 var CKEditor = require('react-ckeditor-wrapper');
 
 
-export default class NewsInsert extends Component {
+export default class NewsUpdate extends Component {
 
   constructor(props) {
       super(props);
       this.state = {
-      news: {
-        title: '',
-        content: '',
-      },
+      news: {},
     }
     this.onSubmit = this.onSubmit.bind(this);
     this.onCancel = this.onCancel.bind(this);
     this.onChange = this.onChange.bind(this);
   }
+
+  componentWillMount() {
+     superagent
+      .get(`/api/v1/news/${this.props.params.id}`)
+      .end((err, res) => {
+        if (!err)
+          this.setState({
+            news: res.body.news,
+          })
+      })
+  }
+
 
   updateContent(value) {
     const { news } = this.state;
@@ -27,7 +36,6 @@ export default class NewsInsert extends Component {
 
   onChange(e) {
     const { name, value } = e.target;
-    console.log(name +  + value);
     const { news } = this.state;
     news[name] = value;
     this.setState({ news });
@@ -35,9 +43,8 @@ export default class NewsInsert extends Component {
 
   onSubmit(e) {
     e.preventDefault();
-    console.log(this.state.news);
     superagent
-      .post('/api/v1/news')
+      .put(`/api/v1/news/${this.state.news._id}`)
       .send({ news: this.state.news })
       .end((err, res) => {
         if (!err) this.props.router.push('/tin-tuc')
@@ -56,7 +63,7 @@ export default class NewsInsert extends Component {
         <div className="col-md-12 col-sm-12 col-xs-12">
           <div className="x_panel">
             <div className="x_title">
-              <h2>Thêm mới Tin tức</h2>
+              <h2>Cập nhật Tin tức</h2>
               <div className="clearfix"></div>
             </div>
             <div className="x_content">

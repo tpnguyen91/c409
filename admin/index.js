@@ -4,6 +4,7 @@ import { Router, Route, IndexRoute, browserHistory } from "react-router";
 import Home from './components/home';
 import News from './components/news';
 import NewsAdd from './components/news/insert';
+import NewsUpdate from './components/news/update';
 import ResultLottery from './components/resultLottery';
 import ResultLotteryInsert from './components/resultLottery/insert';
 import Customer from './components/customer';
@@ -24,6 +25,7 @@ render(
       <IndexRoute component={Home} />
       <Route path={'/tin-tuc'} component={News} />
       <Route path={'/tin-tuc/tao-moi'} component={NewsAdd} />
+      <Route path={'/tin-tuc/:id'} component={NewsUpdate} />
       <Route path={'/kq-xs'} component={ResultLottery} />
       <Route path={'/kq-xs/tao-moi'} component={ResultLotteryInsert} />
       <Route path={'/khach-hang'} component={Customer} />

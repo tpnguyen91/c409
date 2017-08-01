@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import superagent from 'superagent';
 import ReactPaginate from 'react-paginate';
+import moment from 'moment';
 import ReactConfirmAlert, { confirmAlert } from 'react-confirm-alert'; // Import
+import { withRouter, Link } from 'react-router';
+
 import './styles.css'
 
 export default class News extends Component {
@@ -16,37 +19,55 @@ export default class News extends Component {
       id: '',
       isShowLoading: false,
     };
-
     this.onPageChange = this.onPageChange.bind(this);
-    this.onGoToEditPage = this.onGoToEditPage.bind(this);
   }
 
   componentWillMount() {
     this.fetchList();
   }
 
+  alertDialog(id) {
+    confirmAlert({
+      title: 'Xác nhận',                        // Title dialog
+      message: 'Bạn có mún xoá Tin tức này?',               // Message dialog
+      childrenElement: () => <div></div>,       // Custom UI or Component
+      confirmLabel: 'Đồng ý',                           // Text button confirm
+      cancelLabel: 'Huỷ',                             // Text button cancel
+      onConfirm: () => this.onRemove(id),    // Action after Confirm
+      onCancel: () => console.log('Action after Cancel'),      // Action after Cancel
+    })
+  };
+
+
   fetchList() {
     const { limit } = this.state;
     superagent
       .get('/api/v1/news')
       .end((err, res) => {
-        console.log(res);
         const news = (res.body || {}).news || [];
         const page = Math.ceil(news.length / limit);
         this.setState({ news, page });
       })
     }
 
+  onRemove(id) {
+    superagent
+    .delete(`/api/v1/news/${id}`)
+    .end((err, res) => {
+      if(!err) {
+       this.fetchList();
+      }
+    });
+  }
 
   onPageChange({selected: current}) {
     this.setState({ current });
   }
 
   renderBtnAddNew() {
-    const urlEdit = '/dai-ly/' + this.state.id;
     return (
       <div>
-        <a className="btn btn-success btn-lg customBtnAddNew" href='/dai-ly/tao-moi'>Tạo mới</a>
+        <Link className="btn btn-success customBtnAddNew" to='/tin-tuc/tao-moi'>Tạo mới</Link>
       </div>
     );
   }
@@ -68,15 +89,15 @@ export default class News extends Component {
           </tr>
         </thead>
         <tbody>
-          {newNews.map(({ _id: id, title, content }) => (
+          {newNews.map(({ _id: id, title, createdAt }) => (
             <tr className="even pointer" key={id}>
               <td className="a-center " style={{ verticalAlign: 'middle' }} >
                 <input type="checkbox" className="flat" name="table_records" value={id} />
               </td>
               <td className=" " style={{ verticalAlign: 'middle' }}>{title}</td>
-              <td className=" " style={{ verticalAlign: 'middle' }}>{content}</td>
+              <td className=" " style={{ verticalAlign: 'middle' }}>{moment(createdAt).format("DD-MM-YYYY")}</td>
               <td>
-                <a className="btn btn-app" style={{ minWidth: 50, height: 50 }} href={'/dai-ly/' + id}><i className="fa fa-pencil-square"></i></a>
+                <a className="btn btn-app" style={{ minWidth: 50, height: 50 }} href={`/tin-tuc/${id}`}><i className="fa fa-pencil-square"></i></a>
                 <a className="btn btn-app" style={{ minWidth: 50, height: 50 }} onClick={() => this.alertDialog(id)} ><i className="fa fa-close"></i></a>
               </td>
             </tr>

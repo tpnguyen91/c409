@@ -86,7 +86,7 @@ class Merchant extends Component {
     const urlEdit = '/dai-ly/' + this.state.id;
     return (
       <div>
-        <a className="btn btn-success btn-lg customBtnAddNew" href='/dai-ly/tao-moi'>Tạo mới</a>
+        <a className="btn btn-success customBtnAddNew" href='/dai-ly/tao-moi'>Tạo mới</a>
       </div>
     );
   }
@@ -107,7 +107,6 @@ class Merchant extends Component {
             <th className="column-title">Email</th>
             <th className="column-title">Địa Chỉ </th>
             <th className="column-title"></th>
-            <th className="column-title"></th>
           </tr>
         </thead>
         <tbody>
@@ -120,9 +119,9 @@ class Merchant extends Component {
               <td className=" ">{phone}</td>
               <td className=" ">{email}</td>
               <td className=" ">{address}</td>
-              <td className=" "><Link to={`/dai-ly/${id}/nhap-du-lieu`}>Nhập số đã bán</Link></td>
-              <td>
-                <a className="btn btn-app" style={{ minWidth: 50, height: 50 }} href={'/dai-ly/' + id}><i className="fa fa-pencil-square"></i></a>
+              <td className=" ">
+                <a className="btn btn-app" title="Nhập số đã bán" style={{ minWidth: 50, height: 50 }} href={`/dai-ly/${id}/nhap-du-lieu`}><i className="fa fa-file-excel-o"></i></a>
+                <a className="btn btn-app" style={{ minWidth: 50, height: 50 }} href={`/dai-ly/${id}`}><i className="fa fa-pencil-square"></i></a>
                 <a className="btn btn-app" style={{ minWidth: 50, height: 50 }} onClick={() => this.alertDialog(id)} ><i className="fa fa-close"></i></a>
               </td>
             </tr>
