@@ -8,8 +8,7 @@ const isDeveloping = process.env.NODE_ENV !== 'production';
 const port = isDeveloping ? 3000 : process.env.PORT;
 const app = express();
 const bodyParser = require('body-parser')
-const temp = require('./api')
-// const routesApi = require('./api/v1');
+const routesApi = require('./api/routes');
 
 
 require('./models');
@@ -17,12 +16,9 @@ const Crawler = require('./controllers/crawler');
 
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
-// app.use('/api/v1', routesApi.addAPI);
+app.use('/api/v1', routesApi);
 app.use(express.static(path.join(__dirname, '../build/')));
 app.use(express.static(path.join(__dirname, '../public/')));
-app.get('/crawler', Crawler.index);
-app.get('/crawler/fetch', Crawler.fetch);
-temp.api(app);
 // app.get('/crawler', Crawler.index);
 // app.get('/crawler/fetch', Crawler.fetch);
 

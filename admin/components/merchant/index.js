@@ -107,6 +107,7 @@ class Merchant extends Component {
             <th className="column-title">Email</th>
             <th className="column-title">Địa Chỉ </th>
             <th className="column-title"></th>
+            <th className="column-title"></th>
           </tr>
         </thead>
         <tbody>

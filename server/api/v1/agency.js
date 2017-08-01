@@ -1,4 +1,4 @@
-const Model = require('../../../models')
+const Model = require('../../models')
 const fields = ['name', 'address','email','phone','image_url', 'description']
 
 class Agency {
