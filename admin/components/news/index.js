@@ -1,19 +1,60 @@
 import React, { Component } from 'react';
+import superagent from 'superagent';
+import ReactPaginate from 'react-paginate';
+import ReactConfirmAlert, { confirmAlert } from 'react-confirm-alert'; // Import
 import './styles.css'
 
 export default class News extends Component {
 
-  renderChonDanhMuc() {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      limit: 5,
+      current: 0,
+      news: [],
+      id: '',
+      isShowLoading: false,
+    };
+
+    this.onPageChange = this.onPageChange.bind(this);
+    this.onGoToEditPage = this.onGoToEditPage.bind(this);
+  }
+
+  componentWillMount() {
+    this.fetchList();
+  }
+
+  fetchList() {
+    const { limit } = this.state;
+    superagent
+      .get('/api/v1/news')
+      .end((err, res) => {
+        console.log(res);
+        const news = (res.body || {}).news || [];
+        const page = Math.ceil(news.length / limit);
+        this.setState({ news, page });
+      })
+    }
+
+
+  onPageChange({selected: current}) {
+    this.setState({ current });
+  }
+
+  renderBtnAddNew() {
+    const urlEdit = '/dai-ly/' + this.state.id;
     return (
       <div>
-        <a className="btn btn-danger customBtnAddNew">Xoá</a>
-        <a className="btn btn-primary customBtnAddNew">Chỉnh sửa</a>
-        <a className="btn btn-success customBtnAddNew" href='/tin-tuc/tao-moi'>Tạo mới</a>
+        <a className="btn btn-success btn-lg customBtnAddNew" href='/dai-ly/tao-moi'>Tạo mới</a>
       </div>
     );
   }
 
-  renderDanhMucCon() {
+  renderListNews() {
+    const { news = [], limit, current = 0 } = this.state;
+    const newNews = [...news].splice(current * limit, limit);
+
     return (
       <table className="table table-striped jambo_table bulk_action">
         <thead>
@@ -23,26 +64,46 @@ export default class News extends Component {
             </th>
             <th className="column-title">Tiêu đề </th>
             <th className="column-title">Ngày tạo </th>
+            <th className="column-title"></th>
           </tr>
         </thead>
         <tbody>
-          <tr className="even pointer">
-            <td className="a-center ">
-              <input type="checkbox" className="flat" name="table_records" />
-            </td>
-            <td className=" ">121000040</td>
-            <td className=" ">May 23, 2014 11:47:56 PM </td>
-          </tr>
-          <tr className="odd pointer">
-            <td className="a-center ">
-              <input type="checkbox" className="flat" name="table_records" />
-            </td>
-            <td className=" ">121000039</td>
-            <td className=" ">May 23, 2014 11:30:12 PM</td>
-          </tr>
+          {newNews.map(({ _id: id, title, content }) => (
+            <tr className="even pointer" key={id}>
+              <td className="a-center " style={{ verticalAlign: 'middle' }} >
+                <input type="checkbox" className="flat" name="table_records" value={id} />
+              </td>
+              <td className=" " style={{ verticalAlign: 'middle' }}>{title}</td>
+              <td className=" " style={{ verticalAlign: 'middle' }}>{content}</td>
+              <td>
+                <a className="btn btn-app" style={{ minWidth: 50, height: 50 }} href={'/dai-ly/' + id}><i className="fa fa-pencil-square"></i></a>
+                <a className="btn btn-app" style={{ minWidth: 50, height: 50 }} onClick={() => this.alertDialog(id)} ><i className="fa fa-close"></i></a>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
+    );
+  }
 
+   renderPaginate() {
+    const { page, current } = this.state;
+    if (page === 0) return null;
+
+    return (
+      <ReactPaginate
+        previousLabel={"previous"}
+        nextLabel={"next"}
+        breakLabel={<span>...</span>}
+        pageCount={page}
+        marginPagesDisplayed={2}
+        pageRangeDisplayed={5}
+        initialPage={current}
+        onPageChange={this.onPageChange}
+        containerClassName={"pagination"}
+        subContainerClassName={"pages paginate_button"}
+        activeClassName={"active"}
+      />
     );
   }
 
@@ -57,25 +118,15 @@ export default class News extends Component {
               </div>
               <div>
               </div>
-              {this.renderChonDanhMuc()}
+              {this.renderBtnAddNew()}
               <div className="x_content">
                 <div className="table-responsive">
-                  {this.renderDanhMucCon()}
+                  {this.renderListNews()}
                 </div>
               </div>
               <div>
-                  <div className="dataTables_info" id="datatable_info" role="status" aria-live="polite">Showing 41 to 50 of 57 entries</div>
                   <div className="dataTables_paginate paging_simple_numbers" id="datatable_paginate">
-                    <ul className="pagination">
-                      <li className="paginate_button previous" id="datatable_previous"><a href="#" aria-controls="datatable" data-dt-idx="0" tabindex="0">Previous</a></li>
-                      <li className="paginate_button "><a href="#" aria-controls="datatable" data-dt-idx="1" tabindex="0">1</a></li>
-                      <li className="paginate_button "><a href="#" aria-controls="datatable" data-dt-idx="2" tabindex="0">2</a></li>
-                      <li className="paginate_button "><a href="#" aria-controls="datatable" data-dt-idx="3" tabindex="0">3</a></li>
-                      <li className="paginate_button "><a href="#" aria-controls="datatable" data-dt-idx="4" tabindex="0">4</a></li>
-                      <li className="paginate_button active"><a href="#" aria-controls="datatable" data-dt-idx="5" tabindex="0">5</a></li>
-                      <li className="paginate_button "><a href="#" aria-controls="datatable" data-dt-idx="6" tabindex="0">6</a></li>
-                      <li className="paginate_button next" id="datatable_next"><a href="#" aria-controls="datatable" data-dt-idx="7" tabindex="0">Next</a></li>
-                    </ul>
+                   {this.renderPaginate()}
                 </div>
               </div>
             </div>

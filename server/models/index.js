@@ -5,6 +5,7 @@ const awards = require('./awards');
 const agencies = require('./agencies');
 const provinces = require('./provinces');
 const seed = require('../seed/tinh.json');
+const news = require('./news');
 
 // Makes connection asynchronously.  Mongoose will queue up database
 // operations and release them when the connection is complete.
@@ -30,5 +31,6 @@ module.exports = {
   orders,
   awards,
   agencies,
-  provinces
+  provinces,
+  news,
 }

@@ -4,10 +4,10 @@ import { withRouter, Link } from 'react-router';
 import ReactPaginate from 'react-paginate';
 import ReactConfirmAlert, { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css' // Import css
+import './styles.css'
+
 var Spinner = require('react-spinkit');
 
-
-import './styles.css'
 
 class Merchant extends Component {
   constructor(props) {
@@ -82,7 +82,7 @@ class Merchant extends Component {
     this.setState({ current });
   }
 
-  renderChonDanhMuc() {
+  renderBtnAddNew() {
     const urlEdit = '/dai-ly/' + this.state.id;
     return (
       <div>
@@ -91,7 +91,7 @@ class Merchant extends Component {
     );
   }
 
-  renderDanhMucCon() {
+  renderListAgencis() {
     const { agencies = [], limit, current = 0 } = this.state;
     const newAgencies = [...agencies].splice(current * limit, limit);
 
@@ -173,10 +173,10 @@ class Merchant extends Component {
               </div>
               <div>
               </div>
-              {this.renderChonDanhMuc()}
+              {this.renderBtnAddNew()}
               <div className="x_content">
                 <div className="table-responsive">
-                  {this.renderDanhMucCon()}
+                  {this.renderListAgencis()}
                 </div>
               </div>
               <div className="dataTables_paginate paging_simple_numbers" id="datatable_paginate">
