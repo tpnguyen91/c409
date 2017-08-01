@@ -1,4 +1,4 @@
-const Model = require('../../models');
+const Model = require('../../../models');
 const fields = ['title', 'content','category','image_url','tags', 'keywords', 'description', 'createdBy'];
 class News {
 
