@@ -23,9 +23,9 @@ app.use(express.static(path.join(__dirname, '../public/')));
 // app.get('/crawler/fetch', Crawler.fetch);
 
 if (isDeveloping) {
-  // const config = require('../config/webpack.config.dev.js'); uncomment for font end
+  const config = require('../config/webpack.config.dev.js'); //uncomment for font end
   // const config = require('../config/webpack.config.admin.dev.js'); uncomment for admin
-  const config = require('../config/webpack.config.admin.dev.js');
+  // const config = require('../config/webpack.config.admin.dev.js');
   const webpack = require('webpack');
   const webpackMiddleware = require('webpack-dev-middleware');
   const webpackHotMiddleware = require('webpack-hot-middleware');

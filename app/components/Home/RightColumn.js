@@ -126,6 +126,7 @@ class RightColumn extends Component {
   render() {
     return (
         <div className="col-md-3">
+          <a href='/dat-so' className="btn btn-info btn-lg fullWidthBtn">Mua Số Online</a>
           <div className="panel-group panel-group-sm" id="accordion3">
             <div className="panel panel-default">
   						<div className="panel-heading">

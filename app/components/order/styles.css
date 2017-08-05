@@ -1,0 +1,45 @@
+.fullWidthTable {
+  width: 100%;
+}
+
+.width-Numberic {
+  width: 60px ;
+}
+
+.width-Numberic {
+  width: 60px ;
+}
+
+.width-Date {
+  text-align: 'center';
+  font-size: 12px;
+}
+
+.customSizeHeader {
+  font-size: 12px;
+}
+
+.divNumberic {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.react-numeric-input custom {
+  width: 60px;
+}
+
+.listButton {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.butnAddNew {
+  width: 150px;
+  position: relative;
+  float: right;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}

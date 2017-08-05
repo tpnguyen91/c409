@@ -2,7 +2,6 @@ const Model = require('../../models')
 const fields = ['title', 'content','excerpt' ,'category','image_url','tags', 'keywords', 'description', 'createdBy']
 class News {
   index(req, res) {
-    console.log('abc' + Model);
     Model.news.find({})
       .sort({ createdAt: 'desc' })
       .then((news) => res.json({ success: true, news }))
