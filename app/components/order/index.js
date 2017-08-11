@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import superagent from 'superagent';
 import Header from '../Header'
 import Footer from '../Footer'
 import './styles.css';
@@ -8,6 +9,8 @@ import 'react-select/dist/react-select.css';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
+import AlertContainer from 'react-alert'
+
 
 const numeral = require('numeral');
 
@@ -18,6 +21,20 @@ const ListDaiDongNai = [
 
 const ListDaiBinhThuan = [
   'Lâm Đồng', 'Đồng Tháp', 'Vũng Tàu', 'Sóc Trăng', 'Bình Thuận', 'Bình Dương', 'Bình Phước'
+];
+
+const listSeedCode = [
+  { code: 'TG', name: 'Tiền Giang' },
+  { code: 'HCM', name: 'TP Hồ Chí Minh' },
+  { code: 'VT', name: 'Vũng Tàu' },
+  { code: 'DN', name: 'Đồng Nai' },
+  { code: 'TN', name: 'Tây Ninh' },
+  { code: 'BD', name: 'Bình Dương' },
+  { code: 'DT', name: 'Đồng Tháp' },
+  { code: 'LD', name: 'Lâm Đồng' },
+  { code: 'ST', name: 'Sóc Trăng' },
+  { code: 'BT', name: 'Bình Thuận' },
+  { code: 'BP', name: 'Bình Phước' },
 ];
 
 
@@ -88,21 +105,24 @@ export default class OrderUser extends Component {
           seedAward: ' ----- ',
           total: 0,
           price: 10,
-          amoutBuyPrice: 0,
+          amoutBuyPrice: 1,
         },
       ],
+      cusName: '',
+      cusAddress: '',
+      cusPhone: '',
    };
    this.onChangeNPH = this.onChangeNPH.bind(this);
    this.onChangeSo = this.onChangeSo.bind(this);
    this.onChangeDate = this.onChangeDate.bind(this);
+   this.onChange = this.onChange.bind(this);
+   this.onSave = this.onSave.bind(this);
   }
 
-  componentWillMount() {
-
-  }
-
-  initNewOne() {
-    const temp = {
+  resetAllField() {
+    const { cusName, cusAddress, cusPhone, listOrderSo } = this.state;
+    const arr = [
+        {
           merchant: 'BT',
           numbers: {
             type: 2,
@@ -116,11 +136,148 @@ export default class OrderUser extends Component {
           seedAward: ' ----- ',
           total: 0,
           price: 10,
-          amoutBuyPrice: 0,
+          amoutBuyPrice: 1,
+        },
+    ];
+    this.setState({
+      cusName: '',
+      cusAddress: '',
+      cusPhone: '',
+      listOrderSo: arr,
+    })
+  }
+
+  alertOptions = {
+    offset: 14,
+    position: 'top left',
+    theme: 'light',
+    time: 5000,
+    transition: 'scale'
+  }
+
+  showAlert = () => {
+    this.msg.show('Đặt số thành công', {
+      time: 4000,
+      type: 'success',
+    })
+  }
+
+   showAlertFail = () => {
+    this.msg.show('Đặt số thất bại', {
+      time: 4000,
+      type: 'error',
+    })
+  }
+
+   showAlertInfo = (msg) => {
+    this.msg.show(msg, {
+      time: 4000,
+      type: 'info',
+    })
+  }
+
+  onSave() {
+    const { current, cusName, cusAddress, cusPhone, listOrderSo } = this.state;
+    const arr = listOrderSo.map(item => {
+      let number =  0; 
+      if (item.type === 2) {
+        number = Number.parseInt(`${item.number1}${item.number2}`);
+      }
+      if (item.type === 3) {
+        number = Number.parseInt(`${item.number1}${item.number2}${item.number3}`);
+      }
+      if (item.type === 4) {
+        number = Number.parseInt(`${item.number1}${item.number2}${item.number3}${item.number4}`);
+      }
+      let provinceCode = '';
+      listSeedCode.forEach(v => {
+        if (v.name === item.seedAward) {
+          provinceCode = v.code;
         }
+      })
+      return { number, quanlity: item.amoutBuyPrice, price: item.price, type: item.typeBlock, provinceCode, releaseBy: item.merchant }
+    })
+
+     let strValid  = '';
+      if (cusName === '') {
+        strValid = strValid + 'Vui lòng điền tên khách hàng\n';
+      } 
+      if (cusPhone === '') {
+        strValid = strValid + 'Vui lòng điền số điện thoại khách hàng\n';
+      } 
+      if (cusAddress === '') {
+        strValid = strValid + 'Vui lòng điền địa chỉ khách hàng\n';
+      } 
+      if (strValid === '') 
+      {
+        const order = {
+          date: moment(current.format('DD/MM/YYYY'), 'DD/MM/YYYY').toISOString(),
+          cusName,
+          cusAddress,
+          cusPhone,
+          details: arr,
+        };
+        superagent
+        .post('/api/v1/order')
+        .send({ order })
+        .end((err, res) => {
+          if (!err) {
+            this.showAlert();
+            this.resetAllField();
+          }else {
+            this.showAlertFail();
+          }
+        })
+      }else {
+        this.showAlertInfo(strValid);
+      }
+  }
+
+  componentWillMount() {
+    const { listOrderSo } = this.state;
+    let n = listOrderSo[0].date.day();
+    if (listOrderSo[0].merchant === 'BT') {
+      listOrderSo[0].seedAward = ListDaiBinhThuan[n];
+    }else {
+      listOrderSo[0].seedAward = ListDaiDongNai[n];
+    }
+    this.setState({ listOrderSo })
+  }
+
+  initNewOne() {
+    const temp = {
+      merchant: 'BT',
+      numbers: {
+        type: 2,
+        number1: 0,
+        number2: 0,
+        number3: 0,
+        number4: 0,
+      },
+      date: moment(),
+      typeBlock: '',
+      seedAward: ' ----- ',
+      total: 0,
+      price: 10,
+      amoutBuyPrice: 0,
+    }
       const { listOrderSo } = this.state;
       listOrderSo.push(temp);
       this.setState({ listOrderSo });
+  }
+
+  onChange(e) {
+    const { name, value } = e.target;
+
+    if (name === 'cusName') {
+      this.setState({ cusName: value });
+    }
+    if (name === 'cusAddress') {
+      this.setState({ cusAddress: value });
+    }
+    if (name === 'cusPhone') {
+      this.setState({ cusPhone: value });
+    }
   }
 
   onRemove(index) {
@@ -348,6 +505,7 @@ export default class OrderUser extends Component {
   }
 
   renderBoxInfo() {
+    const { cusName, cusPhone, cusAddress } = this.state;
     return (
       <div className="col-sm-6">
         <div className="featured-box featured-box-primary align-left mt-xlg">
@@ -358,11 +516,11 @@ export default class OrderUser extends Component {
                 <div className="form-group">
                   <div className="col-md-6">
                     <label>Tên Khách hàng</label>
-                    <input type="text" value="" placeholder='tên khách hàng' className="form-control" />
+                    <input type="text" name='cusName' value={cusName} onChange={this.onChange}  placeholder='tên khách hàng' className="form-control" />
                   </div>
                   <div className="col-md-6">
                     <label>Điện thoại</label>
-                    <input type="text" value="" placeholder='số diện thoại' className="form-control" />
+                    <input type="text" name='cusPhone' value={cusPhone} onChange={this.onChange} placeholder='số diện thoại' className="form-control" />
                   </div>
                 </div>
               </div>
@@ -370,7 +528,7 @@ export default class OrderUser extends Component {
                 <div className="form-group">
                   <div className="col-md-12">
                     <label>Địa chỉ</label>
-                    <input type="text" value="" placeholder='địa chỉ' className="form-control" />
+                    <input type="text" name='cusAddress' value={cusAddress} onChange={this.onChange} placeholder='địa chỉ' className="form-control" />
                   </div>
                 </div>
               </div>
@@ -400,7 +558,7 @@ export default class OrderUser extends Component {
                     <br />
                     <hr />
                     <div className='listButton'>
-                      <button type="button" style={{ marginRight: 10, width: 100 }}  className="btn btn-primary ">Đặt số</button>
+                      <button type="button" style={{ marginRight: 10, width: 100 }} onClick={this.onSave}  className="btn btn-primary ">Đặt số</button>
                       <button type="button" style={{ marginRight: 10, width: 100 }} className="btn btn-secondary ">Huỷ</button>
                     </div>
                 </div>
@@ -427,6 +585,7 @@ export default class OrderUser extends Component {
   const { listOrderSo } = this.state;
   return (
       <div className="col-md-12">
+        <AlertContainer ref={a => this.msg = a} {...this.alertOptions} />
       {this.renderBoxInput()}
       <div className="featured-box featured-box-primary align-left mt-sm">
         <div className="box-content">

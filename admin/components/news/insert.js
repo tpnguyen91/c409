@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import superagent from 'superagent';
+import AlertContainer from 'react-alert'
 import './styles.css'
+
 var CKEditor = require('react-ckeditor-wrapper');
 
 
@@ -12,11 +14,41 @@ export default class NewsInsert extends Component {
       news: {
         title: '',
         content: '',
+        description: '',
       },
     }
     this.onSubmit = this.onSubmit.bind(this);
     this.onCancel = this.onCancel.bind(this);
     this.onChange = this.onChange.bind(this);
+  }
+
+  alertOptions = {
+    offset: 14,
+    position: 'top left',
+    theme: 'light',
+    time: 5000,
+    transition: 'scale'
+  }
+
+  showAlert = () => {
+    this.msg.show('Đặt số thành công', {
+      time: 4000,
+      type: 'success',
+    })
+  }
+
+   showAlertFail = () => {
+    this.msg.show('Đặt số thất bại', {
+      time: 4000,
+      type: 'error',
+    })
+  }
+
+   showAlertInfo = (msg) => {
+    this.msg.show(msg, {
+      time: 4000,
+      type: 'info',
+    })
   }
 
   updateContent(value) {
@@ -49,11 +81,12 @@ export default class NewsInsert extends Component {
   }
 
   render() {
-    const { title = '', content = '' } = this.state.news || {};
+    const { title = '', content = '', description = '' } = this.state.news || {};
 
     return (
       <div className="row">
         <div className="col-md-12 col-sm-12 col-xs-12">
+          <AlertContainer ref={a => this.msg = a} {...this.alertOptions} />
           <div className="x_panel">
             <div className="x_title">
               <h2>Thêm mới Tin tức</h2>
@@ -72,16 +105,25 @@ export default class NewsInsert extends Component {
                   value={title}
                   name="title"
                   type="text"
-                  id="ex3"
                   className="form-control"
                   onChange={this.onChange}
-                  placeholder=" " />
+                  placeholder="tên bài viết..." />
+              </div>
+              <div className="form-group">
+                <label for="ex3">Mô tả ngắn</label>
+                <textarea
+                  value={description}
+                  name="description"
+                  className="form-control"
+                  onChange={this.onChange}
+                  placeholder="trích dẫn ngắn của bài viết..." />
               </div>
               <div className="form-group">
                 <label for="ex3">Nội dung</label>
                 <CKEditor
                   value={content}
                   onChange={this.updateContent.bind(this)}
+                  placeholder="nội dung..."
                 />
               </div>
 

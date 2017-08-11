@@ -49,20 +49,23 @@ class Header extends Component {
                       <nav>
                         <ul className="nav nav-pills" id="mainNav">
                           <li className="dropdown">
-                            <a className="dropdown-toggle" href="/">
+                            <a className="dropdown-toggle" href="/trang-chu">
                               Trang chủ
                             </a>
                           </li>
                           <li className="dropdown">
-                            <a className="dropdown-toggle" href="/daily">
+                            <a className="dropdown-toggle" href="/dai-ly">
                               Danh sách Đại Lý
                             </a>
                           </li>
                           <li className="dropdown">
                             <a className="dropdown-toggle" href="#">
-                              Lĩnh vực
+                              Thống Kê
                             </a>
                             <ul className="dropdown-menu">
+                              <li className="dropdown-submenu">
+                                <a href="#">Xổ số kiến thiết</a>
+                              </li>
                               <li className="dropdown-submenu">
                                 <a href="#">Xổ số kiến thiết</a>
                               </li>

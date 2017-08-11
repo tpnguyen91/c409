@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import superagent from 'superagent';
 import {
   DanhSachThoCung,
   DanhSach12ConGiap,
@@ -8,6 +8,27 @@ import {
 
 
 class RightColumn extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      news: [],
+    }
+  }
+  
+  componentWillMount() {
+    this.fetchNews();
+  }
+
+  fetchNews() {
+    superagent
+    .get(`/api/v1/news/`)
+    .end((err, res) => {
+      const news = (res.body || {}).news || [];
+      const page = Math.ceil(news.length / 10);
+      this.setState({ news, page });
+    })
+  }
 
   renderThoCung() {
     return (
@@ -124,32 +145,31 @@ class RightColumn extends Component {
   }
 
   render() {
+    const { news } = this.state;
     return (
         <div className="col-md-3">
-          <a href='/dat-so' className="btn btn-info btn-lg fullWidthBtn">Mua Số Online</a>
-          <div className="panel-group panel-group-sm" id="accordion3">
-            <div className="panel panel-default">
-  						<div className="panel-heading">
-  							<h4 className="panel-title">
-  								<a className="accordion-toggle" data-toggle="collapse" data-parent="#accordion4" href="#collapse4One" aria-expanded="true">
-  									<b>Tin Tức</b>
-  								</a>
-  							</h4>
-  						</div>
-  						<div id="collapse4One" className="accordion-body collapse in" aria-expanded="true">
-  							<div className="panel-body">
-                  <ul className="nav nav-list narrow">
-									<li><a href="shortcodes-accordions.html">Mức chi hoa hồng đại lý xổ số</a></li>
-									<li><a href="shortcodes-toggles.html">Chuyện cổ tích sau tờ vé số độc đắc</a></li>
-									<li><a href="shortcodes-tabs.html">Trúng số triệu USD, thưởng Tết cho nhân viên</a></li>
-									<li><a href="shortcodes-icons.html">Cấm khuyến mại xổ số dưới mọi hình thức</a></li>
-									<li><a href="shortcodes-icon-boxes.html">  Tự “chế” vé số trúng giải đặc biệt 1,5 tỷ đồng</a></li>
-									<li><a href="shortcodes-carousels.html">Thay đổi giờ mở thưởng Xổ số Miền Bắc</a></li>
-								</ul>
-  							</div>
-  					  </div>
-  					</div>
-          </div>
+          <a href='/dat-so' className="btn btn-secondary btn-lg fullWidthBtn">Mua Số Online</a>
+          {
+            news.length > 0 ?
+              <div className="panel-group panel-group-sm" id="accordion3">
+                <div className="panel panel-default">
+                  <div id="collapse4One" className="accordion-body collapse in" aria-expanded="true">
+                    <div className="panel-body">
+                      <ul className="nav nav-list narrow">
+                        {
+                          news.map(item => {
+                            return (
+                              <li><a href={`/tin-tuc/${item._id}`}>{item.title}</a></li>
+                            );
+                          })
+                        }
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              : null
+          }
     			<div className="toggle toggle-secondary toggle-sm" data-plugin-toggle>
     				<section className="toggle active">
     					<label><b>100 con số</b></label>

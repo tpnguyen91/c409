@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import superagent from 'superagent';
 import moment from 'moment';
+import DatePicker from 'react-datepicker';
+import superagent from 'superagent';
 import Header from '../Header'
 import Footer from '../Footer'
-import LeftColumn from './LeftColumn';
-import RightColumn from './RightColumn';
-import './styles.css';
-import './templateConGiap.css';
+import LeftColumn from '../Home/LeftColumn';
+import RightColumn from '../Home/RightColumn';
+import '../Home/styles.css';
+import '../Home/templateConGiap.css';
 
 import {
   listLogo,
@@ -17,15 +18,19 @@ import {
   DataGiaiThuong3So,
   DataGiaiThuong4So,
   COLOR_HILIGHT,
-} from './data';
+} from '../Home/data';
 
-class Home extends Component {
+export default class ResultLottery extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
+      selectedDate: moment(),
+      isOpen: false,
       resultLottery: [],
     }
+    this.onChangeDate = this.onChangeDate.bind(this);
+    this.toggleCalendar = this.toggleCalendar.bind(this);
   }
 
   componentWillMount() {
@@ -33,35 +38,48 @@ class Home extends Component {
   }
 
   fetchData() {
-    const { resultLottery } = this.state;
-    const urlDate = moment().format('DD-MM-YYYY');
-    console.log(urlDate);
-    superagent
-    .get(`/api/v1/crawler/${urlDate}`)
-    .end((err, res) => {
-      const arr = (res.body || {}).result || [];
-      this.setState({ resultLottery: arr });
-      console.log(arr);
-    })
+    const { resultLottery, selectedDate } = this.state;
+    const urlDate = selectedDate.format('DD-MM-YYYY');
+     superagent
+      .get(`/api/v1/crawler/${urlDate}`)
+      .end((err, res) => {
+        const arr = (res.body || {}).result || [];
+        console.log(arr);
+        this.setState({ resultLottery: arr });
+      })
+  }
+
+  onChangeDate(selectedDate) {
+    this.setState({
+      selectedDate,
+      isOpen: !this.state.isOpen
+    }, () => {
+      this.fetchData();
+    });
+  }
+
+  toggleCalendar (e) {
+    e && e.preventDefault()
+    this.setState({isOpen: !this.state.isOpen})
   }
 
   renderCoCauGiaiThuong() {
     return (
       <div className="tabs">
           <div className="divTitle1"><span>CƠ CẤU GIẢI THƯỞNG VÉ SỐ LÔ TÔ BÌNH THUẬN</span></div>
-					<ul className="nav nav-tabs nav-justified">
-						<li className="active">
-							<a href="#2so" data-toggle="tab" className="text-center" aria-expanded="true">Vé số Lô Tô loại 2 số</a>
-						</li>
-						<li className="">
-							<a href="#3so" data-toggle="tab" className="text-center" aria-expanded="false">Vé số Lô Tô loại 3 số</a>
-						</li>
+          <ul className="nav nav-tabs nav-justified">
+            <li className="active">
+              <a href="#2so" data-toggle="tab" className="text-center" aria-expanded="true">Vé số Lô Tô loại 2 số</a>
+            </li>
             <li className="">
-							<a href="#4so" data-toggle="tab" className="text-center" aria-expanded="true">Vé số Lô Tô loại 4 số</a>
-						</li>
-					</ul>
+              <a href="#3so" data-toggle="tab" className="text-center" aria-expanded="false">Vé số Lô Tô loại 3 số</a>
+            </li>
+            <li className="">
+              <a href="#4so" data-toggle="tab" className="text-center" aria-expanded="true">Vé số Lô Tô loại 4 số</a>
+            </li>
+          </ul>
           <div className="tab-content">
-						<div id="2so" className="tab-pane active">
+            <div id="2so" className="tab-pane active">
               <table className="kqxs" width="100%" border="0" cellpadding="0" cellspacing="0">
                 <tbody>
                   <tr>
@@ -84,8 +102,8 @@ class Home extends Component {
                   }
                 </tbody>
               </table>
-						</div>
-						<div id="3so" className="tab-pane">
+            </div>
+            <div id="3so" className="tab-pane">
               <table className="kqxs" width="100%" border="0" cellpadding="0" cellspacing="0">
                 <tbody>
                   <tr>
@@ -108,7 +126,7 @@ class Home extends Component {
                   }
                 </tbody>
               </table>
-						</div>
+            </div>
             <div id="4so" className="tab-pane">
               <table className="kqxs" width="100%" border="0" cellpadding="0" cellspacing="0">
                 <tbody>
@@ -133,8 +151,8 @@ class Home extends Component {
                 </tbody>
               </table>
             </div>
-					</div>
-			</div>
+          </div>
+      </div>
     );
   }
 
@@ -170,7 +188,32 @@ class Home extends Component {
     return (
       <div style={{ marginBottom: 20 }}>
         <div className="divTitle">
-          <span>KẾT QUẢ XỔ SỐ MIỀN NAM - {item.date} </span>
+          <span>KẾT QUẢ XỔ SỐ MIỀN NAM - <a
+            href='#' style={{ color: 'white' }}
+            onClick={this.toggleCalendar}>
+              {item.date}
+            </a>
+          {
+            this.state.isOpen && (
+              <DatePicker
+                  selected={this.state.selectedDate}
+                  onChange={this.onChangeDate}
+                  withPortal
+                  inline />
+            )
+          }
+          </span>
+          <a
+            href='#'
+            onClick={() => alert('Tính năng đang được hoàn thiện!')}
+            style={{
+              position: 'relative',
+              float: 'right',
+              top: '2',
+              right: '5',
+
+            }}
+          ><i className="fa fa-bar-chart" style={{ color: 'white', fontSize: 20 }} aria-hidden="true"></i></a>
         </div>
         <table className="kqxs" width="100%" border="0" cellpadding="0" cellspacing="0">
           <tbody>
@@ -304,19 +347,18 @@ class Home extends Component {
     );
   }
 
-
   renderMain() {
     const { resultLottery } = this.state;
     return (
       <div className="col-md-6">
-        {this.renderCoCauGiaiThuong()}
-        {this.renderDaiDuThuong()}
-        {
-          resultLottery.length > 0 ?
-          this.renderKQSX(resultLottery[0])
-          : null
-        }
-    </div>
+      {
+        resultLottery.map(item => {
+          return (
+            this.renderKQSX(item)
+          );
+        })
+      }
+      </div>
     );
   }
 
@@ -328,12 +370,12 @@ class Home extends Component {
             {
               listLogo.map(item => (
                 <div>
-                  <img alt="" className="img-responsive img-rounded" style={{ width: 100, height: 100 }} src={item} />
+                  <img alt="" className="img-responsive img-rounded sizeImageLogo" src={item} />
                 </div>
               ))
             }
-  				</div>
-  			</div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -367,4 +409,3 @@ class Home extends Component {
   }
 }
 
-export default Home;

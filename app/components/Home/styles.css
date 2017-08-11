@@ -4,6 +4,20 @@
   margin-bottom: 10px;
 }
 
+.fullWidthBtnDate {
+  width: 100%;
+}
+
+.btnAwardL {
+  width: 48%;
+  margin-right: 4%;
+}
+
+
+.btnAwardR {
+  width: 48%;
+}
+
 .ads img{
   display: flex;
   width: 100%;
@@ -195,8 +209,7 @@ custom-td {
 
 .inputSeri {
   color: red;
-  margin-top: 10px;
-  font-weight: bold;
+  text-align: center;
 }
 
 .tag:hover {
@@ -212,8 +225,8 @@ custom-td {
   overflow: auto;
 }
 .sizeImageLogo {
-  width: 168px;
-  height: 168px;
+  width: 80px;
+  height: 80px;
 }
 .marginTop {
   margin-top: 10px;
@@ -280,4 +293,24 @@ custom-td {
 }
 .divDaiLi {
   width: 100%;
+}
+
+.buttonOrder {
+  animation:myfirst 5s;
+  background: #e36159;
+  border-color: #e36159;
+  -moz-animation:myfirst 5s infinite; /* Firefox */
+    -webkit-animation:myfirst 5s infinite;
+}
+
+@-moz-keyframes myfirst /* Firefox */
+{
+  0%   {background: #e36159; border-color: #e36159; }
+  100%   {background: #30bec6; border-color: #30bec6; }
+}
+
+@-webkit-keyframes myfirst /* Firefox */
+{
+  0%   {background: #e36159; border-color: #e36159; }
+  100%   {background: #30bec6; border-color: #30bec6; }
 }

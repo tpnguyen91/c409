@@ -12,6 +12,7 @@
     "mongoose": "^4.10.8",
     "numeral": "^2.0.6",
     "react": "^15.6.1",
+    "react-alert": "^2.2.0",
     "react-bootstrap-date-picker": "^5.0.1",
     "react-bootstrap-select": "^0.14.0",
     "react-ckeditor-wrapper": "^1.0.22",

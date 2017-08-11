@@ -5,6 +5,7 @@ import Home from './components/Home';
 import Merchant from './components/Merchant';
 import BlogPost from './components/blog';
 import OrderNumber from './components/order';
+import ResultLottery from './components/resultLottery';
 import BlogDetailPost from './components/blog/blogDetail';
 
 render(
@@ -18,10 +19,11 @@ render(
       }}
     >
       <IndexRoute component={Home} />
-      <Route path={'/home'} component={Home} />
+      <Route path={'/trang-chu'} component={Home} />
+      <Route path={'/kqxs'} component={ResultLottery} />
       <Route path={'/dai-ly'} component={Merchant} />
-      <Route path={'/blog'} component={BlogPost} />
-      <Route path={'/blog/:id'} component={BlogDetailPost} />
+      <Route path={'/tin-tuc'} component={BlogPost} />
+      <Route path={'/tin-tuc/:id'} component={BlogDetailPost} />
       <Route path={'/dat-so'} component={OrderNumber} />
     </Route>
   </Router>,

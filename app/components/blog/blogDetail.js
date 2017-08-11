@@ -31,12 +31,12 @@ export default class BlogDetail extends Component {
 
     return (
       <div className="row">
-        <div className="col-md-9" style={{ marginTop: 10 }}>
+        <div className="col-md-12" style={{ marginTop: 10 }}>
           <div className="blog-posts single-post">
             <article className="post post-large blog-single-post">
               <div className="post-date">
-                <span className="day">10</span>
-                <span className="month">Jan</span>
+                <span className="day">{moment(createdAt).date()}</span>
+                <span className="month">T {moment(createdAt).month() + 1}</span>
               </div>
               <div className="post-content">
                 <h2><a href="#">{title}</a></h2>
@@ -44,8 +44,6 @@ export default class BlogDetail extends Component {
               </div>
             </article>
           </div>
-        </div>
-        <div className="col-md-3">
         </div>
       </div>
     );

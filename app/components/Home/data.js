@@ -187,7 +187,7 @@ export const DataGiaiThuong3So = [
         '25.000.000 đ',
       ],
     },
-    { name: 'Đầu',
+    { name: 'Cuối',
       money: [
         '5.000.000 đ',
         '10.000.000 đ',

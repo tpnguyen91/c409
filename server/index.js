@@ -9,18 +9,13 @@ const port = isDeveloping ? 3000 : process.env.PORT;
 const app = express();
 const bodyParser = require('body-parser')
 const routesApi = require('./api/routes');
-
-
 require('./models');
-const Crawler = require('./controllers/crawler');
 
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 app.use('/api/v1', routesApi);
 app.use(express.static(path.join(__dirname, '../build/')));
 app.use(express.static(path.join(__dirname, '../public/')));
-// app.get('/crawler', Crawler.index);
-// app.get('/crawler/fetch', Crawler.fetch);
 
 if (isDeveloping) {
   const config = require('../config/webpack.config.dev.js'); //uncomment for font end

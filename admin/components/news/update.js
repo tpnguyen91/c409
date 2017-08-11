@@ -56,7 +56,7 @@ export default class NewsUpdate extends Component {
   }
 
   render() {
-    const { title = '', content = '' } = this.state.news || {};
+    const { title = '', content = '', description = '' } = this.state.news || {};
 
     return (
       <div className="row">
@@ -83,6 +83,15 @@ export default class NewsUpdate extends Component {
                   className="form-control"
                   onChange={this.onChange}
                   placeholder=" " />
+              </div>
+              <div className="form-group">
+                <label for="ex3">Mô tả ngắn</label>
+                <textarea
+                  value={description}
+                  name="description"
+                  className="form-control"
+                  onChange={this.onChange}
+                  placeholder="trích dẫn ngắn của bài viết..." />
               </div>
               <div className="form-group">
                 <label for="ex3">Nội dung</label>

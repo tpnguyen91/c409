@@ -1,5 +1,5 @@
 const Model = require('../../models')
-const fields = ['customer', 'agency', 'province', 'date']
+const fields = ['customer', 'agency', 'cusName', 'cusAddress', 'cusPhone', 'province', 'date']
 const detailField = ['seri', 'number', 'quanlity', 'price', 'type', 'provinceCode', 'releaseBy']
 
 class Order {

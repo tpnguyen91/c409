@@ -21,24 +21,24 @@ import CommonAddNew from './components/common/insert';
 
 render(
   <Router history={browserHistory}>
-    <Route path={'/'}>
+    <Route path={'/admin'}>
       <IndexRoute component={Home} />
-      <Route path={'/tin-tuc'} component={News} />
-      <Route path={'/tin-tuc/tao-moi'} component={NewsAdd} />
-      <Route path={'/tin-tuc/:id'} component={NewsUpdate} />
-      <Route path={'/kq-xs'} component={ResultLottery} />
-      <Route path={'/kq-xs/tao-moi'} component={ResultLotteryInsert} />
-      <Route path={'/khach-hang'} component={Customer} />
-      <Route path={'/khach-hang/tao-moi'} component={CustomerInsert} />
-      <Route path={'/user'} component={User} />
-      <Route path={'/order'} component={Order} />
-      <Route path={'/order/:id'} component={OrderDetail} />
-      <Route path={'/dai-ly'} component={Merchant} />
-      <Route path={'/dai-ly/tao-moi'} component={MerchantAddNew} />
-      <Route path={'/dai-ly/:id/nhap-du-lieu'} component={MerchantImport} />
-      <Route path={'/dai-ly/:id'} component={MerchantUpdate} />
-      <Route path={'/common/new'} component={CommonAddNew} />
-      <Route path={'/common/:id'} component={CommonAddNew} />
+      <Route path={'/admin/tin-tuc'} component={News} />
+      <Route path={'/admin/tin-tuc/tao-moi'} component={NewsAdd} />
+      <Route path={'/admin/tin-tuc/:id'} component={NewsUpdate} />
+      <Route path={'/admin/kq-xs'} component={ResultLottery} />
+      <Route path={'/admin/kq-xs/tao-moi'} component={ResultLotteryInsert} />
+      <Route path={'/admin/khach-hang'} component={Customer} />
+      <Route path={'/admin/khach-hang/tao-moi'} component={CustomerInsert} />
+      <Route path={'/admin/user'} component={User} />
+      <Route path={'/admin/order'} component={Order} />
+      <Route path={'/admin/order/:id'} component={OrderDetail} />
+      <Route path={'/admin/dai-ly'} component={Merchant} />
+      <Route path={'/admin/dai-ly/tao-moi'} component={MerchantAddNew} />
+      <Route path={'/admin/dai-ly/:id/nhap-du-lieu'} component={MerchantImport} />
+      <Route path={'/admin/dai-ly/:id'} component={MerchantUpdate} />
+      <Route path={'/admin/common/new'} component={CommonAddNew} />
+      <Route path={'/admin/common/:id'} component={CommonAddNew} />
     </Route>
   </Router>,
   document.getElementById('root')
