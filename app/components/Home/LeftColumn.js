@@ -3,6 +3,19 @@ import moment from 'moment';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import superagent from 'superagent';
+import ReactDOM from 'react-dom';
+import Modal from 'react-modal';
+
+const customStyles = {
+  content : {
+    top                   : '50%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)'
+  }
+};
 
 const listNhaPhatHanh = [
   { value: 'BT', label: 'Bình Thuận' },
@@ -82,13 +95,35 @@ class LeftColumn extends Component {
       typeNumber: 2,
       typeBlock: '',
       listBlock: listBlocks[2],
+      number: '',
       isOpen: false,
       resultLottery: {},
+      modalIsOpen: false
    };
-   this.handleChange = this.handleChange.bind(this);
-   this.onChangeDate = this.onChangeDate.bind(this);
-   this.toggleCalendar = this.toggleCalendar.bind(this);
+  this.handleChange = this.handleChange.bind(this);
+  this.onChangeDate = this.onChangeDate.bind(this);
+  this.toggleCalendar = this.toggleCalendar.bind(this);
+  this.onClickCheckResult = this.onClickCheckResult.bind(this);
+  this.onChangeNumber = this.onChangeNumber.bind(this);
+
+  this.openModal = this.openModal.bind(this);
+  this.afterOpenModal = this.afterOpenModal.bind(this);
+  this.closeModal = this.closeModal.bind(this);
  }
+
+  openModal() {
+    this.setState({modalIsOpen: true});
+  }
+ 
+  afterOpenModal() {
+    // references are now sync'd and can be accessed. 
+    // this.subtitle.style.color = '#f00';
+  }
+ 
+  closeModal() {
+    this.setState({modalIsOpen: false});
+  }
+ 
 
   componentWillMount() {
     this.updateValueDaiDuThuong();
@@ -99,12 +134,12 @@ class LeftColumn extends Component {
     const { current } = this.state;
     const urlDate = current.format('DD-MM-YYYY');
     superagent
-    .get(`/api/v1/crawler/${urlDate}`)
+    .get(`/api/v1/crawler/11-08-2017`)
     .end((err, res) => {
       const arr = (res.body || {}).result || [];
       if (arr.length > 0) {
         arr.forEach(item => {
-          if (item.date.trim() === current.format('DD/MM/YYYY')) {
+          if (item.date.trim() === '11/08/2017') {
             item.data.forEach(v => {
               if (v.code.includes('XSBD')) {
                 this.setState({ resultLottery: v });
@@ -118,7 +153,143 @@ class LeftColumn extends Component {
     })
   }
 
+  checkTypeTwoNumber() {
+    const { resultLottery, number, typeNumber, typeBlock  } = this.state;
+    if (typeBlock === 'DAU') {
+      if (resultLottery.giai8 === number) return 'giai8';
+      return '';
+    } 
+    if (typeBlock === 'CUOI') {
+      if (resultLottery.giaidb.substr(resultLottery.giaidb.length - typeNumber) === number) return 'giaidb';
+      return '';
+    }
+    if (typeBlock === 'DAU/CUOI') {
+      const award = [];
+      if (resultLottery.giai8 === number) {
+        award.push('giai8');
+      } 
+      if (resultLottery.giaidb.substr(resultLottery.giaidb.length - typeNumber) === number) {
+        award.push('giaidb');
+      } 
+      return award.join('-');
+    }
+    if (typeBlock === '18LO') {
+      const award = [];
+      for (var i = 0; i < 9; i++) {
+        let nameAward = i === 0 ? 'giaidb' : `giai${i}`
+        let value = resultLottery[nameAward];
+        if (nameAward === 'giai6' || nameAward === 'giai4' || nameAward === 'giai3') {
+          const arr = value.split('-');
+          let flag = false;
+          arr.forEach(item => {
+            if (item.substr(item.length - typeNumber) === number) {
+              flag = true;
+            }
+          });
+          if (flag) { award.push(nameAward); }
+        }else if (value.substr(value.length - typeNumber) === number) {
+          award.push(nameAward);
+        }
+      }
+      return award.join('-');
+    }
+  }
+
+  checkTypeThreeNumber() {
+    const { resultLottery, number, typeNumber, typeBlock } = this.state;
+    if (typeBlock === 'DAU') {
+      if (resultLottery.giai7 === number) return 'giai7';
+      return '';
+    } 
+    if (typeBlock === 'CUOI') {
+      if (resultLottery.giaidb.substr(resultLottery.giaidb.length - typeNumber) === number) return 'giaidb';
+      return '';
+    }
+    if (typeBlock === 'DAU/CUOI') {
+      const award = [];
+      if (resultLottery.giai7 === number) {
+        award.push('giai7');
+      } 
+      if (resultLottery.giaidb.substr(resultLottery.giaidb.length - typeNumber) === number) {
+        award.push('giaidb');
+      } 
+      return award.join('-');
+    }
+    if (typeBlock === '7LO') {
+      let value = resultLottery['giai4'];
+      const arr = value.split('-');
+      let flag = false;
+      arr.forEach(item => {
+        if (item.substr(item.length - typeNumber) === number) {
+          flag = true;
+        }
+      });
+      return flag ? 'giai4': '';
+    }
+    if (typeBlock === '17LO') {
+      const award = [];
+      for (var i = 0; i < 8; i++) {
+        let nameAward = i === 0 ? 'giaidb' : `giai${i}`
+        let value = resultLottery[nameAward];
+        if (nameAward === 'giai6' || nameAward === 'giai4' || nameAward === 'giai3') {
+          const arr = value.split('-');
+          let flag = false;
+          arr.forEach(item => {
+            if (item.substr(item.length - typeNumber) === number) {
+              flag = true;
+            }
+          });
+          if (flag) { award.push(nameAward); }
+        }else if (value.substr(value.length - typeNumber) === number) {
+          award.push(nameAward);
+        }
+      }
+      return award.join('-');
+    }
+  }
   
+  checkTypeFourNumber() {
+    const { resultLottery, number, typeNumber, typeBlock } = this.state;
+    if (typeBlock === '4LO') {
+      const award = [];
+      let value = resultLottery['giai6'];
+      const arr = value.split('-');
+      let flag = false;
+      arr.forEach(item => {
+        if (item.substr(item.length - typeNumber) === number) {
+          flag = true;
+        }
+      });
+      if (flag) { award.push('giai6');}
+
+      value = resultLottery['giai5'];
+      if (value.substr(value.length - typeNumber) === number) {
+        award.push('giai5');
+      }
+    return award.join('-');
+    }
+    if (typeBlock === '16LO') {
+      const award = [];
+      for (var i = 0; i < 7; i++) {
+        let nameAward = i === 0 ? 'giaidb' : `giai${i}`
+        let value = resultLottery[nameAward];
+        if (nameAward === 'giai6' || nameAward === 'giai4' || nameAward === 'giai3') {
+          const arr = value.split('-');
+          let flag = false;
+          arr.forEach(item => {
+            if (item.substr(item.length - typeNumber) === number) {
+              flag = true;
+            }
+          });
+          if (flag) { award.push(nameAward);}
+        }else if (value.substr(value.length - typeNumber) === number) {
+          award.push(nameAward);
+        }
+      }
+      return award.join('-');
+    }
+  }
+
   updateValueDaiDuThuong() {
     const { valueNPH, current } = this.state;
     const indexDay = current.day();
@@ -165,9 +336,56 @@ class LeftColumn extends Component {
     });
   }
 
+  onChangeNumber(e) {
+    const { name, value } = e.target;
+    if (name === 'number') {
+      this.setState({ number: value });
+    }
+  }
+
   toggleCalendar (e) {
     e && e.preventDefault()
     this.setState({isOpen: !this.state.isOpen})
+  }
+
+  onClickCheckResult() {
+    const { typeNumber } = this.state;
+    if (typeNumber === 2) {
+      console.log(this.checkTypeTwoNumber());
+    }
+    if (typeNumber === 3) {
+      console.log(this.checkTypeThreeNumber());
+    }
+    if (typeNumber === 4) {
+      console.log(this.checkTypeFourNumber());
+    }
+    this.openModal();
+  }
+
+
+  renderKQLoTo() {
+    return (
+      <Modal
+          isOpen={this.state.modalIsOpen}
+          onAfterOpen={this.afterOpenModal}
+          onRequestClose={this.closeModal}
+          style={customStyles}
+          contentLabel="Example Modal"
+        >
+          <div>
+            <div className="divTitle"><span>KẾT QUẢ XỔ SỐ MIỀN NAM - 11/08/2017</span>
+            </div>
+              <table className="kqxs" width="100%">
+                <tr id="kqxs">
+                  <td>G8</td>
+                  <td><div>86</div></td>
+                  <td><div>73</div></td>
+                  <td><div>36</div></td>
+                </tr>
+            </table>
+          </div>
+      </Modal>
+    );
   }
 
   renderTraCuuLoto() {
@@ -185,7 +403,7 @@ class LeftColumn extends Component {
 									<div id="" className="accordion-body collapse in">
   						<div className="panel-body">
                 <form className="form-group wrapper">
-                  <div className='form-group'>
+                  <div className='form-group'>  
                     <Select
                       value={this.state.valueNPH}
                       clearable={false}
@@ -235,9 +453,17 @@ class LeftColumn extends Component {
                   </div>
                   </div>
                   <div className='form-group'>
-                    <input className="form-control inputSeri" placeholder="Nhập số" id="pwd" />
+                    <input 
+                      className="form-control inputSeri" 
+                      name='number' 
+                      value={this.state.number} 
+                      onChange={this.onChangeNumber}
+                      placeholder="Nhập số" />
                   </div>
-                <button type="button" className="btn btn-secondary marginTop">Xem Kết Quả</button>
+                <button 
+                  type="button" 
+                  onClick={this.onClickCheckResult}
+                  className="btn btn-secondary marginTop">Xem Kết Quả</button>
                 </form>
   						</div>
   					</div>
@@ -299,6 +525,7 @@ class LeftColumn extends Component {
   render() {
     return (
       <div className="col-md-3" >
+          {this.renderKQLoTo()}
           {this.renderTraCuuLoto()}
           {this.renderItem()}
           <div className='divAds' />

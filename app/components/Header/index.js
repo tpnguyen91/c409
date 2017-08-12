@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 
 class Header extends Component {
+  
   render() {
+    const urlLogo = 'https://scontent.fsgn5-2.fna.fbcdn.net/v/t1.0-9/20708501_1492174620842913_9223091692716436737_n.jpg?oh=26cd48513c9a38c7dd55098ca302ef88&oe=59EAF9A1';
     return (
       <header id="header" data-plugin-options='{"stickyEnabled": true, "stickyEnableOnBoxed": true, "stickyEnableOnMobile": true, "stickyStartAt": 57, "stickySetTop": "-57px", "stickyChangeLogo": true}'>
         <div className="header-body">
@@ -9,8 +11,8 @@ class Header extends Component {
             <div className="header-row">
               <div className="header-column">
                 <div className="header-logo">
-                  <a href="index.html">
-                    <img alt="Porto" width="111" height="100" data-sticky-width="82" data-sticky-height="40" data-sticky-top="33" src="https://scontent.fsgn5-2.fna.fbcdn.net/v/t1.0-9/19437293_1446431182083924_3640658876894421587_n.jpg?oh=cff49e1be6238616979193f41a397bcd&oe=59DFF1F4" />
+                  <a href="/trang-chu">
+                    <img alt="Porto" width="400" height="130" data-sticky-width="82" data-sticky-height="40" data-sticky-top="33" src={urlLogo} />
                   </a>
                 </div>
               </div>
