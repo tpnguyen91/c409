@@ -27,14 +27,15 @@ class MerchantInsert extends Component {
     e.preventDefault();
     superagent
       .post('/api/v1/agency')
+      .set('token', this.props.currentUser.token)
       .send({ agency: this.state.agency })
       .end((err, res) => {
-        if (!err) this.props.router.push('/dai-ly')
+        if (!err) this.props.router.push('/admin/dai-ly')
       })
   }
 
   onCancel() {
-    this.props.router.push('/dai-ly');
+    this.props.router.push('/admin/dai-ly');
   }
 
   onReset() {

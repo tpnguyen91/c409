@@ -1,7 +1,6 @@
-import ApiV1 from './v1'
+import { isAuthenticated } from '../helpers/auth';
+const ApiV1 = require('./routes');
 
-module.exports.api = (app) => {
-  ApiV1(app);
+module.exports = (app) => {
+  app.use('/api/v1', isAuthenticated, ApiV1)
 }
-
-

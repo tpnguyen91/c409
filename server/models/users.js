@@ -3,8 +3,8 @@ var Schema = mongoose.Schema;
 
 var userSchema = new Schema({
   username: { type: String, trim: true, require: true, unique: true },
-  email: { type: String, trim: true, require: true },
-  password: { type: String, trim: true, require: true, unique: true },
+  email: { type: String, trim: true, require: true, unique: true },
+  password: { type: String, trim: true, require: true },
   last_name: { type: String, trim: true },
   first_name: { type: String, trim: true },
   phone: { type: String, trim: true },
@@ -14,4 +14,4 @@ var userSchema = new Schema({
   timestamps: true
 });
 
-export default  mongoose.model('User', userSchema);
+module.exports = mongoose.model('User', userSchema);

@@ -25,6 +25,7 @@ class MerchantUpdate extends Component {
   componentWillMount() {
      superagent
       .get('/api/v1/agency/' + this.props.params.id)
+      .set('token', this.props.currentUser.token)
       .end((err, res) => {
         if (!err)
           this.setState({
@@ -38,14 +39,15 @@ class MerchantUpdate extends Component {
     e.preventDefault();
     superagent
       .put('/api/v1/agency/' + this.props.params.id)
+      .set('token', this.props.currentUser.token)
       .send({ agency: this.state.agency })
       .end((err, res) => {
-        if (!err) this.props.router.push('/dai-ly')
+        if (!err) this.props.router.push('/admin/dai-ly')
       })
   }
 
   onCancel() {
-    this.props.router.push('/dai-ly');
+    this.props.router.push('/admin/dai-ly');
   }
 
   onChange(e) {

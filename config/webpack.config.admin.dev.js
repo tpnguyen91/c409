@@ -31,7 +31,7 @@ module.exports = {
       path.resolve(info.absoluteResourcePath),
   },
   resolve: {
-    modules: ['node_modules', paths.appNodeModules].concat(
+    modules: ['admin', 'node_modules', paths.appNodeModules].concat(
       process.env.NODE_PATH.split(path.delimiter).filter(Boolean)
     ),
     extensions: ['.js', '.json', '.jsx'],

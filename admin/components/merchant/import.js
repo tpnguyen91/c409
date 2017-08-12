@@ -51,9 +51,10 @@ class Import extends Component {
 
     superagent
       .post('/api/v1/order')
+      .set('token', this.props.currentUser.token)
       .send({ order })
       .end((err, res) => {
-        if (!err) this.props.router.push(`/order/${res.body.order._id}`)
+        if (!err) this.props.router.push(`/admin/order/${res.body.order._id}`)
       })
   }
 

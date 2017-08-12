@@ -18,7 +18,9 @@
 
 .nav-sm .hidden-small {
   visibility: hidden; }
-
+.right_col {
+  height: calc(100vh - 50px);
+}
 .nav-sm .container.body .right_col {
   padding: 10px 20px;
   margin-left: 70px;

@@ -4,42 +4,29 @@ require('babel-register')
 require('babel-polyfill')
 const path = require('path');
 const express = require('express');
+const bodyparser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const methodOverride = require('method-override');
+const session = require('express-session');
+
 const isDeveloping = process.env.NODE_ENV !== 'production';
 const port = isDeveloping ? 3000 : process.env.PORT;
 const app = express();
-const bodyParser = require('body-parser')
-const routesApi = require('./api/routes');
 require('./models');
+const routesApi = require('./api');
 
-app.use(bodyParser.urlencoded({extended: true}))
-app.use(bodyParser.json())
-app.use('/api/v1', routesApi);
+app.use(bodyparser.urlencoded({extended: true}))
+app.use(bodyparser.json())
+app.use(cookieParser())
+app.use(methodOverride('X-HTTP-Method-Override'))
+app.use(session({secret: 'CRBeL8o5JZsLOG4OFcjqWpr', resave: false, saveUninitialized: true}))
+
+routesApi(app);
+
 app.use(express.static(path.join(__dirname, '../build/')));
 app.use(express.static(path.join(__dirname, '../public/')));
 
-if (isDeveloping) {
-  const config = require('../config/webpack.config.dev.js'); //uncomment for font end
-  // const config = require('../config/webpack.config.admin.dev.js'); uncomment for admin
-  // const config = require('../config/webpack.config.admin.dev.js');
-  const webpack = require('webpack');
-  const webpackMiddleware = require('webpack-dev-middleware');
-  const webpackHotMiddleware = require('webpack-hot-middleware');
-  const compiler = webpack(config);
-  const middleware = webpackMiddleware(compiler, {
-    noInfo: true,
-    silent: true,
-    stats: 'errors-only',
-    publicPath: config.output.publicPath,
-    contentBase: 'admin'
-  });
-  app.use(middleware);
-  app.use(webpackHotMiddleware(compiler));
-  app.get('*', function response(req, res) {
-    res.write(middleware.fileSystem.readFileSync(path.join(__dirname, '../build/index.html')));
-    res.end();
-  });
-
-} else {
+if (process.env.NODE_ENV === 'production') {
   app.get('*', function response(req, res) {
     res.sendFile(path.join(__dirname, '../build/index.html'));
   });

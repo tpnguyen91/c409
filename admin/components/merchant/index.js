@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import superagent from 'superagent';
 import { withRouter, Link } from 'react-router';
 import ReactPaginate from 'react-paginate';
+import Auth from 'services/auth';
 import ReactConfirmAlert, { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css' // Import css
 import './styles.css'
 
 var Spinner = require('react-spinkit');
-
 
 class Merchant extends Component {
   constructor(props) {
@@ -43,11 +43,13 @@ class Merchant extends Component {
 
   fetchList() {
     const { limit } = this.state;
+    const { currentUser = {} } = this.props;
      this.setState({
       isShowLoading: true,
     })
     superagent
       .get('/api/v1/agency')
+      .set('token', currentUser.token)
       .end((err, res) => {
         this.setState({
           isShowLoading: false,
@@ -64,6 +66,7 @@ class Merchant extends Component {
     });
     superagent
     .delete('/api/v1/agency/' + id)
+    .set('token', this.props.currentUser.token)
     .end((err, res) => {
       this.setState({
         isShowLoading: false,
@@ -75,7 +78,7 @@ class Merchant extends Component {
   }
 
   onGoToEditPage() {
-    this.props.router.push('/dai-ly/cap-nhat');
+    this.props.router.push('/admin/dai-ly/cap-nhat');
   }
 
   onPageChange({selected: current}) {
@@ -83,10 +86,10 @@ class Merchant extends Component {
   }
 
   renderBtnAddNew() {
-    const urlEdit = '/dai-ly/' + this.state.id;
+    const urlEdit = '/admin/dai-ly/' + this.state.id;
     return (
       <div>
-        <a className="btn btn-success customBtnAddNew" href='/dai-ly/tao-moi'>Tạo mới</a>
+        <Link className="btn btn-success customBtnAddNew" to={'/admin/dai-ly/tao-moi'}>Tạo mới</Link>
       </div>
     );
   }
@@ -120,9 +123,9 @@ class Merchant extends Component {
               <td className=" ">{email}</td>
               <td className=" ">{address}</td>
               <td className=" ">
-                <a className="btn btn-app" title="Nhập số đã bán" style={{ minWidth: 50, height: 50 }} href={`/dai-ly/${id}/nhap-du-lieu`}><i className="fa fa-file-excel-o"></i></a>
-                <a className="btn btn-app" style={{ minWidth: 50, height: 50 }} href={`/dai-ly/${id}`}><i className="fa fa-pencil-square"></i></a>
-                <a className="btn btn-app" style={{ minWidth: 50, height: 50 }} onClick={() => this.alertDialog(id)} ><i className="fa fa-close"></i></a>
+                <Link className="btn btn-app" title="Nhập số đã bán" style={{ minWidth: 50, height: 50 }} to={`/admin/dai-ly/${id}/nhap-du-lieu`}><i className="fa fa-file-excel-o"></i></Link>
+                <Link className="btn btn-app" style={{ minWidth: 50, height: 50 }} to={`/admin/dai-ly/${id}`}><i className="fa fa-pencil-square"></i></Link>
+                <Link className="btn btn-app" style={{ minWidth: 50, height: 50 }} to="" onClick={() => this.alertDialog(id)} ><i className="fa fa-close"></i></Link>
               </td>
             </tr>
           ))}
