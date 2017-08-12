@@ -1,7 +1,7 @@
 
 /* eslint no-console: 0 */
-require('babel-register')
-require('babel-polyfill')
+require('babel-register');
+require('babel-polyfill');
 const path = require('path');
 const express = require('express');
 const bodyparser = require('body-parser');

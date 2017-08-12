@@ -2,13 +2,16 @@ import crypto from 'crypto'
 import jwt from 'jsonwebtoken'
 import config from '../config/config'
 import Model from '../models'
+import unAuth from './unAuth'
 
 export const encryption = (password) => crypto.createHash('sha256').update(password).digest('base64');
 
 export const generateJWTToken = (user) => jwt.sign(user, config.JWT.SECRET, { expiresIn: config.JWT.EXPIRE_TIME })
 
 export const isAuthenticated = (req, res, next) => {
-  if (req.path === '/auth' && req.method === 'POST') return next();
+  const passed = unAuth.filter((route) => req.path.indexOf(route.path) > -1 && (route.method === undefined || req.method === route.method))[0];
+
+  if (passed) return next();
 
   const token = getTokenFromReq(req);
   if (!token) {
