@@ -17,7 +17,7 @@ export default class BlogDetail extends Component {
 
   componentWillMount() {
     superagent
-      .get(`/api/v1/news/${this.state.id}`)
+      .get(`/apiClient/v1/news/${this.state.id}`)
       .end((err, res) => {
         if (!err)
           this.setState({

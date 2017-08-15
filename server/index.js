@@ -14,9 +14,11 @@ const port = isDeveloping ? 3000 : process.env.PORT;
 const app = express();
 require('./models');
 const routesApi = require('./api');
+const routesApiClient = require('./apiV2/routes');
 
 app.use(bodyparser.urlencoded({extended: true}))
 app.use(bodyparser.json())
+app.use('/apiClient/v1', routesApiClient);
 app.use(cookieParser())
 app.use(methodOverride('X-HTTP-Method-Override'))
 app.use(session({secret: 'CRBeL8o5JZsLOG4OFcjqWpr', resave: false, saveUninitialized: true}))

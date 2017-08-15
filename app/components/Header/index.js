@@ -74,7 +74,7 @@ class Header extends Component {
                             </ul>
                           </li>
                           <li className="dropdown">
-                            <a className="dropdown-toggle" href="#">
+                            <a className="dropdown-toggle" href="/tin-tuc">
                               Tin Tức
                             </a>
                           </li>

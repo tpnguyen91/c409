@@ -5,6 +5,8 @@ import DatePicker from 'react-datepicker';
 import superagent from 'superagent';
 import ReactDOM from 'react-dom';
 import Modal from 'react-modal';
+import NumericInput from 'react-numeric-input';
+import AlertContainer from 'react-alert'
 
 const customStyles = {
   content : {
@@ -13,7 +15,7 @@ const customStyles = {
     right                 : 'auto',
     bottom                : 'auto',
     marginRight           : '-50%',
-    transform             : 'translate(-50%, -50%)'
+    transform             : 'translate(-50%, -50%)',
   }
 };
 
@@ -23,11 +25,23 @@ const listNhaPhatHanh = [
 ];
 
 const ListDaiDongNai = [
-  'Tiền Giang', 'TP Hồ Chí Minh', 'Vũng Tàu', 'Đồng Nai', 'Tây Ninh', 'Bình Dương', 'TP Hồ Chí Minh'
+  {code: 'XSTG', name:  'Tiền Giang'},
+  {code: 'XSHCM', name: 'TP Hồ Chí Minh'},
+  {code: 'XSVT', name: 'Vũng Tàu'},
+  {code: 'XSDN', name: 'Đồng Nai'},
+  {code: 'XSTN', name: 'Tây Ninh'},
+  {code: 'XSBD', name: 'Bình Dương'},
+  {code: 'XSHCM', name: 'TP Hồ Chí Minh'},
 ];
 
 const ListDaiBinhThuan = [
-  'Lâm Đồng', 'Đồng Tháp', 'Vũng Tàu', 'Sóc Trăng', 'Bình Thuận', 'Bình Dương', 'Bình Phước'
+  {code: 'XSDL', name: 'Đà Lạt'}, 
+  {code: 'XSDT', name: 'Đồng Tháp'}, 
+  {code: 'XSVT', name: 'Vũng Tàu'}, 
+  {code: 'XSST', name: 'Sóc Trăng'}, 
+  {code: 'XSBTH', name: 'Bình Thuận'}, 
+  {code: 'XSBD', name: 'Bình Dương'}, 
+  {code: 'XSBP', name: 'Bình Phước'},
 ];
 
 const listBlocks = {
@@ -90,15 +104,17 @@ class LeftColumn extends Component {
    this.state = {
       value: new Date().toISOString(),
       valueNPH: 'BT',
-      valueDaiDuThuong: '',
+      valueDaiDuThuong: {},
       current: moment(),
       typeNumber: 2,
       typeBlock: '',
+      nameTypeBlock: '',
       listBlock: listBlocks[2],
       number: '',
       isOpen: false,
       resultLottery: {},
-      modalIsOpen: false
+      modalIsOpen: false,
+      result: [],
    };
   this.handleChange = this.handleChange.bind(this);
   this.onChangeDate = this.onChangeDate.bind(this);
@@ -109,7 +125,16 @@ class LeftColumn extends Component {
   this.openModal = this.openModal.bind(this);
   this.afterOpenModal = this.afterOpenModal.bind(this);
   this.closeModal = this.closeModal.bind(this);
+  this.renderKQLoTo = this.renderKQLoTo.bind(this);
  }
+
+  alertOptions = {
+    offset: 14,
+    position: 'top left',
+    theme: 'light',
+    time: 5000,
+    transition: 'scale'
+  }
 
   openModal() {
     this.setState({modalIsOpen: true});
@@ -124,54 +149,112 @@ class LeftColumn extends Component {
     this.setState({modalIsOpen: false});
   }
  
+  showAlert = (msg) => {
+    this.msg.show(msg, {
+      time: 4000,
+      type: 'success',
+    })
+  }
+
+   showAlertFail = (msg) => {
+    this.msg.show(msg, {
+      time: 4000,
+      type: 'error',
+    })
+  }
+
+   showAlertInfo = (msg) => {
+    this.msg.show(msg, {
+      time: 4000,
+      type: 'info',
+    })
+  }
 
   componentWillMount() {
     this.updateValueDaiDuThuong();
-    this.fetchDataResultLottery();
   }
 
-  fetchDataResultLottery() {
-    const { current } = this.state;
-    const urlDate = current.format('DD-MM-YYYY');
-    superagent
-    .get(`/api/v1/crawler/11-08-2017`)
-    .end((err, res) => {
-      const arr = (res.body || {}).result || [];
-      if (arr.length > 0) {
-        arr.forEach(item => {
-          if (item.date.trim() === '11/08/2017') {
-            item.data.forEach(v => {
-              if (v.code.includes('XSBD')) {
-                this.setState({ resultLottery: v });
-                console.log(v);
-              }
-            })
-            return;
-          }
-        })
-      }
-    })
+  getNameOfAward(code) {
+    if (code === 'giai8') return 'Giải 8'
+    if (code === 'giai7') return 'Giải 7'
+    if (code === 'giai6') return 'Giải 6'
+    if (code === 'giai5') return 'Giải 5'
+    if (code === 'giai4') return 'Giải 4'
+    if (code === 'giai3') return 'Giải 3'
+    if (code === 'giai2') return 'Giải 2'
+    if (code === 'giai1') return 'Giải 1'
+    if (code === 'giaidb') return 'Giải Đặc biệt'
+
   }
 
   checkTypeTwoNumber() {
     const { resultLottery, number, typeNumber, typeBlock  } = this.state;
     if (typeBlock === 'DAU') {
-      if (resultLottery.giai8 === number) return 'giai8';
-      return '';
+      if (resultLottery.giai8 === number) {
+        let rs = { 
+          code: 'giai8', 
+          name: 'Giải 8', 
+          data: [
+            {
+              number: resultLottery.giai8, 
+              firstNumber: resultLottery.giai8.substr(0, resultLottery.giai8.length - typeNumber),
+              lastNumber: resultLottery.giai8.substr(resultLottery.giai8.length - typeNumber),
+            }
+          ]
+         
+        }
+        return [rs];
+      }
+      return [];
     } 
     if (typeBlock === 'CUOI') {
-      if (resultLottery.giaidb.substr(resultLottery.giaidb.length - typeNumber) === number) return 'giaidb';
-      return '';
+      if (resultLottery.giaidb.substr(resultLottery.giaidb.length - typeNumber) === number) {
+        let rs = { 
+          code: 'giaidb', 
+          name: 'Giải Đặc biệt', 
+          data: [
+            {
+              number: resultLottery.giaidb, 
+              firstNumber: resultLottery.giaidb.substr(0, resultLottery.giaidb.length - typeNumber),
+              lastNumber: resultLottery.giaidb.substr(resultLottery.giaidb.length - typeNumber),
+            }
+          ]
+        }
+        return [rs];
+      }
+      return [] ;
     }
     if (typeBlock === 'DAU/CUOI') {
       const award = [];
       if (resultLottery.giai8 === number) {
-        award.push('giai8');
+        let rs = { 
+          code: 'giai8', 
+          name: 'Giải 8', 
+          data: [
+            {
+              number: resultLottery.giai8, 
+              firstNumber: resultLottery.giai8.substr(0, resultLottery.giai8.length - typeNumber),
+              lastNumber: resultLottery.giai8.substr(resultLottery.giai8.length - typeNumber),
+            }
+          ]
+        }
+        award.push(rs);
       } 
       if (resultLottery.giaidb.substr(resultLottery.giaidb.length - typeNumber) === number) {
-        award.push('giaidb');
+        let rs = { 
+          code: 'giaidb', 
+          name: 'Giải Đặc biệt', 
+          data: [
+            {
+              number: resultLottery.giaidb, 
+              firstNumber: resultLottery.giaidb.substr(0, resultLottery.giaidb.length - typeNumber),
+              lastNumber: resultLottery.giaidb.substr(resultLottery.giaidb.length - typeNumber),
+            }
+          ]
+        }
+        return [rs];
       } 
-      return award.join('-');
+      return award;
     }
     if (typeBlock === '18LO') {
       const award = [];
@@ -180,51 +263,121 @@ class LeftColumn extends Component {
         let value = resultLottery[nameAward];
         if (nameAward === 'giai6' || nameAward === 'giai4' || nameAward === 'giai3') {
           const arr = value.split('-');
-          let flag = false;
+          let rs = { code: nameAward,  name: this.getNameOfAward(nameAward), data: [] };
           arr.forEach(item => {
             if (item.substr(item.length - typeNumber) === number) {
-              flag = true;
+              let temp = { 
+                number: item, 
+                firstNumber: item.substr(0, item.length - typeNumber),
+                lastNumber: item.substr(item.length - typeNumber),
+              }
+              rs.data.push(temp);
+              award.push(rs);
             }
           });
-          if (flag) { award.push(nameAward); }
         }else if (value.substr(value.length - typeNumber) === number) {
-          award.push(nameAward);
+          let rs = { 
+            code: nameAward,  
+            name: this.getNameOfAward(nameAward), 
+            data: [
+              {
+                number: value, 
+                firstNumber: value.substr(0, value.length - typeNumber),
+                lastNumber: value.substr(value.length - typeNumber),
+              }
+            ]
+          }
+          award.push(rs);
         }
       }
-      return award.join('-');
+      return award;
     }
   }
 
   checkTypeThreeNumber() {
     const { resultLottery, number, typeNumber, typeBlock } = this.state;
     if (typeBlock === 'DAU') {
-      if (resultLottery.giai7 === number) return 'giai7';
-      return '';
+      if (resultLottery.giai7 === number) {
+        let rs = { 
+          code: 'giai7', 
+          name: 'Giải 7', 
+          data: [
+            {
+              number: resultLottery.giai7, 
+              firstNumber: resultLottery.giai7.substr(0, resultLottery.giai7.length - typeNumber),
+              lastNumber: resultLottery.giai7.substr(resultLottery.giai7.length - typeNumber),
+            }
+          ]
+        }
+        return [rs];
+      }
+      return [];
     } 
     if (typeBlock === 'CUOI') {
-      if (resultLottery.giaidb.substr(resultLottery.giaidb.length - typeNumber) === number) return 'giaidb';
-      return '';
+      if (resultLottery.giaidb.substr(resultLottery.giaidb.length - typeNumber) === number) {
+        let rs = { 
+          code: 'giaidb', 
+          name: 'Giải Đặc biệt', 
+          data: [
+            {
+              number: resultLottery.giaidb, 
+              firstNumber: resultLottery.giaidb.substr(0, resultLottery.giaidb.length - typeNumber),
+              lastNumber: resultLottery.giaidb.substr(resultLottery.giaidb.length - typeNumber),    
+            }
+          ]
+        }
+        return [rs];
+      }
+      return [] ;
     }
     if (typeBlock === 'DAU/CUOI') {
       const award = [];
       if (resultLottery.giai7 === number) {
-        award.push('giai7');
+        let rs = { 
+          code: 'giai7', 
+          name: 'Giải 7', 
+          data: [
+            {
+              number: resultLottery.giai7, 
+              firstNumber: resultLottery.giai7.substr(0, resultLottery.giai7.length - typeNumber),
+              lastNumber: resultLottery.giai7.substr(resultLottery.giai7.length - typeNumber),
+            }
+          ]
+        }
+        award.push(rs);
       } 
       if (resultLottery.giaidb.substr(resultLottery.giaidb.length - typeNumber) === number) {
-        award.push('giaidb');
+        let rs = { 
+          code: 'giaidb', 
+          name: 'Giải Đặc biệt', 
+          data: [
+            {
+              number: resultLottery.giaidb, 
+              firstNumber: resultLottery.giaidb.substr(0, resultLottery.giaidb.length - typeNumber),
+              lastNumber: resultLottery.giaidb.substr(resultLottery.giaidb.length - typeNumber),
+            }
+          ]
+        }
+        return [rs];
       } 
-      return award.join('-');
+      return award;
     }
     if (typeBlock === '7LO') {
       let value = resultLottery['giai4'];
       const arr = value.split('-');
-      let flag = false;
+      let rs = { code: 'giai4',  name: 'Giải 4', data: [] };
       arr.forEach(item => {
         if (item.substr(item.length - typeNumber) === number) {
-          flag = true;
+          let temp = { 
+            number: item, 
+            firstNumber: item.substr(0, item.length - typeNumber),
+            lastNumber: item.substr(item.length - typeNumber),
+          }
+          rs.data.push(temp);
         }
       });
-      return flag ? 'giai4': '';
+      if (rs.data.length > 0) return [rs];
+      return [];
     }
     if (typeBlock === '17LO') {
       const award = [];
@@ -233,18 +386,34 @@ class LeftColumn extends Component {
         let value = resultLottery[nameAward];
         if (nameAward === 'giai6' || nameAward === 'giai4' || nameAward === 'giai3') {
           const arr = value.split('-');
-          let flag = false;
+          let rs = { code: nameAward,  name: this.getNameOfAward(nameAward), data: [] };
           arr.forEach(item => {
             if (item.substr(item.length - typeNumber) === number) {
-              flag = true;
+              let temp = { 
+                number: item, 
+                firstNumber: item.substr(0, item.length - typeNumber),
+                lastNumber: item.substr(item.length - typeNumber),
+              }
+              rs.data.push(temp);
+              award.push(rs);
             }
           });
-          if (flag) { award.push(nameAward); }
         }else if (value.substr(value.length - typeNumber) === number) {
-          award.push(nameAward);
+          let rs = { 
+            code: nameAward,  
+            name: this.getNameOfAward(nameAward), 
+            data: [
+              {
+                number: value, 
+                firstNumber: value.substr(0, value.length - typeNumber),
+                lastNumber: value.substr(value.length - typeNumber),
+              }
+            ]
+          }
+          award.push(rs);
         }
       }
-      return award.join('-');
+      return award;
     }
   }
   
@@ -254,19 +423,34 @@ class LeftColumn extends Component {
       const award = [];
       let value = resultLottery['giai6'];
       const arr = value.split('-');
-      let flag = false;
+      let rs = { code: 'giai6',  name: 'Giải 6', data: [] };
       arr.forEach(item => {
         if (item.substr(item.length - typeNumber) === number) {
-          flag = true;
+          let temp = { 
+            number: item, 
+            firstNumber: item.substr(0, item.length - typeNumber),
+            lastNumber: item.substr(item.length - typeNumber),
+          }
+          rs.data.push(temp);
+          award.push(rs);
         }
       });
-      if (flag) { award.push('giai6');}
-
       value = resultLottery['giai5'];
       if (value.substr(value.length - typeNumber) === number) {
-        award.push('giai5');
+        let rs = { 
+          code: 'giai5', 
+          name: 'Giải 5', 
+          data: [
+            {
+              number: resultLottery.giai5, 
+              firstNumber: resultLottery.giai5.substr(0, resultLottery.giai5.length - typeNumber),
+              lastNumber: resultLottery.giai5.substr(resultLottery.giai5.length - typeNumber),
+            }
+          ]
+        }
+        return [rs];
       }
-    return award.join('-');
+    return award;
     }
     if (typeBlock === '16LO') {
       const award = [];
@@ -275,18 +459,34 @@ class LeftColumn extends Component {
         let value = resultLottery[nameAward];
         if (nameAward === 'giai6' || nameAward === 'giai4' || nameAward === 'giai3') {
           const arr = value.split('-');
-          let flag = false;
+          let rs = { code: nameAward,  name: this.getNameOfAward(nameAward), data: [] };
           arr.forEach(item => {
             if (item.substr(item.length - typeNumber) === number) {
-              flag = true;
+              let temp = { 
+                number: item, 
+                firstNumber: item.substr(0, item.length - typeNumber),
+                lastNumber: item.substr(item.length - typeNumber),
+              }
+              rs.data.push(temp);
+              award.push(rs);
             }
           });
-          if (flag) { award.push(nameAward);}
         }else if (value.substr(value.length - typeNumber) === number) {
-          award.push(nameAward);
+          let rs = { 
+            code: nameAward,  
+            name: this.getNameOfAward(nameAward), 
+            data: [
+              {
+                number: value, 
+                firstNumber: value.substr(0, value.length - typeNumber),
+                lastNumber: value.substr(value.length - typeNumber),
+              }
+            ]
+          }
+          award.push(rs);
         }
       }
-      return award.join('-');
+      return award;
     }
   }
 
@@ -325,6 +525,7 @@ class LeftColumn extends Component {
   onChangLoaiLo(val) {
     this.setState({
       typeBlock: val.value,
+      nameTypeBlock: val.label,
     });
   }
 
@@ -332,6 +533,7 @@ class LeftColumn extends Component {
     this.setState({
       typeNumber: val.value,
       typeBlock: '',
+      nameTypeBlock: '',
       listBlock: listBlocks[val.value],
     });
   }
@@ -339,6 +541,12 @@ class LeftColumn extends Component {
   onChangeNumber(e) {
     const { name, value } = e.target;
     if (name === 'number') {
+      if (/[^\d]/.test(value)) {
+        return 
+      }
+      if (value.length > 4) {
+        return 
+      }
       this.setState({ number: value });
     }
   }
@@ -348,42 +556,169 @@ class LeftColumn extends Component {
     this.setState({isOpen: !this.state.isOpen})
   }
 
+  onValid() {
+    const { typeBlock, number } = this.state;
+    let isValid = true;
+    if (typeBlock === '') {
+      isValid = false;
+      this.showAlertInfo(`Vui lòng chọn loại Lô!`);
+    }
+    if (number === '') {
+      isValid = false;
+      this.showAlertInfo(`Vui lòng Nhập số dự thưởng của bạn!`);
+    }
+    return isValid
+  }
+
   onClickCheckResult() {
-    const { typeNumber } = this.state;
-    if (typeNumber === 2) {
-      console.log(this.checkTypeTwoNumber());
-    }
-    if (typeNumber === 3) {
-      console.log(this.checkTypeThreeNumber());
-    }
-    if (typeNumber === 4) {
-      console.log(this.checkTypeFourNumber());
-    }
-    this.openModal();
+    const { current, valueDaiDuThuong, typeNumber } = this.state;
+    const urlDate = current.format('DD-MM-YYYY');
+    const dateDefault = current.format('DD/MM/YYYY');
+    const codeProvince = valueDaiDuThuong.code;
+    const params = `urlDate=${urlDate}&dateDefault=${dateDefault}&codeProvince=${codeProvince}`;
+    if (!this.onValid()) return;
+    superagent
+    .get(`/apiClient/v1/crawler?${params}`)
+    .end((err, res) => {
+      if (res.body.success) {
+        this.setState({
+          resultLottery: res.body.result,
+        }, () => {
+          if (typeNumber === 2) {
+             this.setState({ result:  this.checkTypeTwoNumber()}, () => {
+                this.openModal();          
+             });
+          }
+          if (typeNumber === 3) {
+             this.setState({ result:  this.checkTypeThreeNumber()}, () => {
+                this.openModal();          
+             });
+          }
+          if (typeNumber === 4) {
+             this.setState({ result:  this.checkTypeFourNumber()}, () => {
+                this.openModal();          
+             });
+          }
+        })
+      }
+      else {
+        this.showAlertFail(`Chưa có KQXS cho ngày ${dateDefault}`);
+      }
+    })
   }
 
 
   renderKQLoTo() {
+    const { resultLottery, current, result, valueNPH, valueDaiDuThuong, typeNumber, typeBlock, nameTypeBlock, number } = this.state;
     return (
       <Modal
           isOpen={this.state.modalIsOpen}
           onAfterOpen={this.afterOpenModal}
           onRequestClose={this.closeModal}
           style={customStyles}
+          shouldCloseOnOverlayClick={false}
           contentLabel="Example Modal"
         >
-          <div>
-            <div className="divTitle"><span>KẾT QUẢ XỔ SỐ MIỀN NAM - 11/08/2017</span>
+          <div style={{ width: 500 }}>
+            <div className="panel-group panel-group-lg" id="accordion5">
+              <div className="panel panel-default">
+                <div className="panel-heading">
+                  <h4 className="panel-title">
+                    <a className="accordion-toggle" data-toggle="collapse" data-parent="#accordion5">
+                      Kết quả dò vé số {resultLottery.title} - Xổ số Miền Nam, ngày {current.format('DD/MM/YYYY')}
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse5One" className="accordion-body collapse in">
+                  <div className="panel-body">
+                    <div
+                      style={{
+                        color: 'black',
+                        fontWeight: '400',
+                        fontSize: 16,
+                        marginBottom: 10,
+                      }}
+                    >Thông tin vé Lô Tô <span style={{ color: 'red', fontWeight: 'bold' }}>({valueNPH === 'BT' ? 'Bình Thuận' : 'Đồng Nai'})</span> :</div>
+                    <div
+                    > 
+                      <i>
+                        <span> - Đài dự thưởng: </span>
+                        <span
+                         style={{ color: 'red', fontWeight: 'bold' }}
+                        >{valueDaiDuThuong.name}</span>
+                        , ngày <span
+                          style={{ color: 'red', fontWeight: 'bold' }}
+                        >{current.format('DD/MM/YYYY')}</span>
+                      </i>
+                    </div>
+                      <i>
+                        <span> - Loại: </span>
+                        <span style={{ color: 'red', fontWeight: 'bold' }} >{typeNumber} số ({nameTypeBlock})</span></i><br />
+                      <i>
+                        <span> - Số dự thưởng của bạn: </span>
+                        <span style={{ color: 'red', fontWeight: 'bold' }} >{number}</span>
+                      </i>
+                      <hr />
+                     {
+                        result.length === 0 ? 
+                          <div>
+                            <div 
+                              style={{
+                                color: 'red',
+                                fontSize:  15,
+                                fontWeight: 'bold'
+                              }}
+                            ><i>** Rất tiếc con số dự thưởng của bạn đã không trúng. Chúc bạn may mắn lần sau.</i></div>
+                            <hr />
+                          </div>
+                        : 
+                        <div>
+                          <div>
+                            <div 
+                              style={{
+                                color: 'red',
+                                fontSize:  16,
+                                fontWeight: 'bold',
+                                marginBottom: 10,
+                              }}
+                            >Chúc mừng bạn đã trúng giải:</div>
+                            {
+                              result.map(item => {
+                                return (
+                                  <i>
+                                    <div>
+                                      <span style={{ color: 'black' }}>
+                                        - Kết quả trúng ở hàng: {item.name}
+                                      </span>
+                                      {
+                                        item.data.map(item => {
+                                          return (
+                                            <span> ({item.firstNumber}<span style={{ color: 'red', fontWeight: 'bold', fontSize: 15 }} >{item.lastNumber})</span></span>
+                                          );
+                                        })
+                                      }
+                                    </div>
+                                  </i>
+                                );
+                              })
+                            }
+                            <hr />
+                            <i style={{ fontSize: 12 }}>** Liên hệ đại lý gần nhất để nhận giải thưởng.</i>
+                          </div>
+                        </div>
+                      }
+                  </div>
+                </div>
+              </div>
             </div>
-              <table className="kqxs" width="100%">
-                <tr id="kqxs">
-                  <td>G8</td>
-                  <td><div>86</div></td>
-                  <td><div>73</div></td>
-                  <td><div>36</div></td>
-                </tr>
-            </table>
-          </div>
+            <button
+              type="button"
+              className="btn btn-primary"
+              style={{ position: 'relative', float: 'right', top: 5, width: 100 }}
+              onClick={() => this.setState({ modalIsOpen: false })}>
+              Huỷ
+            </button>
+        </div>
       </Modal>
     );
   }
@@ -420,9 +755,9 @@ class LeftColumn extends Component {
                       </button>
                       <button
                         type="button"
-                        style={{ fontSize: 12 }}
-                        className="btn btn-info btnAwardR">
-                        {this.state.valueDaiDuThuong}
+                        style={{ fontSize: 12, color: 'red', fontWeight: 'bold' }}
+                        className="btn btn-default btnAwardR">
+                        {this.state.valueDaiDuThuong.name}
                       </button>
                       {
                         this.state.isOpen && (
@@ -525,6 +860,7 @@ class LeftColumn extends Component {
   render() {
     return (
       <div className="col-md-3" >
+          <AlertContainer ref={a => this.msg = a} {...this.alertOptions} />
           {this.renderKQLoTo()}
           {this.renderTraCuuLoto()}
           {this.renderItem()}

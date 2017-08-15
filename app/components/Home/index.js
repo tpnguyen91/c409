@@ -37,7 +37,7 @@ class Home extends Component {
     const urlDate = moment().format('DD-MM-YYYY');
     console.log(urlDate);
     superagent
-    .get(`/api/v1/crawler/${urlDate}`)
+    .get(`/apiClient/v1/crawler/${urlDate}`)
     .end((err, res) => {
       const arr = (res.body || {}).result || [];
       this.setState({ resultLottery: arr });

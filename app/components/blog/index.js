@@ -22,7 +22,7 @@ export default class Blog extends Component {
 
   componentWillMount() {
     superagent
-      .get(`/api/v1/news/`)
+      .get(`/apiClient/v1/news/`)
       .end((err, res) => {
         const news = (res.body || {}).news || [];
         const page = Math.ceil(news.length / 10);
