@@ -1,8 +1,9 @@
 import crypto from 'crypto'
 import jwt from 'jsonwebtoken'
 import config from '../config/config'
-import Model from '../models'
 import unAuth from './unAuth'
+
+const Model = require('../models/users');
 
 export const encryption = (password) => crypto.createHash('sha256').update(password).digest('base64');
 
@@ -45,7 +46,7 @@ export const getUserFromToken = (token) => new Promise((resolve, reject) => {
       })
     }
 
-    return Model.users
+    return Model
     .findOne({ _id: decoded._id, email: decoded.email })
     .then((user) => {
       if (!user) {
