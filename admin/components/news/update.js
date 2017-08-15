@@ -19,6 +19,7 @@ export default class NewsUpdate extends Component {
   componentWillMount() {
      superagent
       .get(`/api/v1/news/${this.props.params.id}`)
+      .set('token', this.props.currentUser.token)
       .end((err, res) => {
         if (!err)
           this.setState({

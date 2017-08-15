@@ -70,6 +70,7 @@ export default class NewsInsert extends Component {
     console.log(this.state.news);
     superagent
       .post('/api/v1/news')
+      .set('token', this.props.currentUser.token)
       .send({ news: this.state.news })
       .end((err, res) => {
         if (!err) this.props.router.push('/tin-tuc')

@@ -4,6 +4,7 @@ import ReactPaginate from 'react-paginate';
 import moment from 'moment';
 import ReactConfirmAlert, { confirmAlert } from 'react-confirm-alert'; // Import
 import { withRouter, Link } from 'react-router';
+import Auth from 'services/auth';
 
 import './styles.css'
 
@@ -41,8 +42,11 @@ export default class News extends Component {
 
   fetchList() {
     const { limit } = this.state;
+    const { currentUser = {} } = this.props;
+
     superagent
       .get('/api/v1/news')
+      .set('token', currentUser.token)
       .end((err, res) => {
         const news = (res.body || {}).news || [];
         const page = Math.ceil(news.length / limit);
@@ -67,7 +71,7 @@ export default class News extends Component {
   renderBtnAddNew() {
     return (
       <div>
-        <Link className="btn btn-success customBtnAddNew" to='/tin-tuc/tao-moi'>Tạo mới</Link>
+        <Link className="btn btn-success customBtnAddNew" to='/admin/tin-tuc/tao-moi'>Tạo mới</Link>
       </div>
     );
   }
