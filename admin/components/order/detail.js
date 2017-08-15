@@ -24,6 +24,7 @@ class Order extends Component {
     const { id } = this.props.params;
     superagent
     .get(`/api/v1/order/${id}`)
+    .set('token', this.props.currentUser.token)
     .end((err, res) => {
       const order = (res.body || {}).order || {};
       const page = Math.ceil((order.detail || []).length / limit);

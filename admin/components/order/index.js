@@ -23,6 +23,7 @@ class Order extends Component {
     const { limit } = this.state;
     superagent
     .get('/api/v1/order')
+    .set('token', this.props.currentUser.token)
     .end((err, res) => {
       const orders = (res.body || {}).orders || [];
       const page = Math.ceil(orders.length / limit);
@@ -74,7 +75,7 @@ class Order extends Component {
               <td className=" ">{moment(date).format('DD/MM/YYYY')}</td>
               <td className=" ">{detail.length}</td>
               <td className=" ">{detail.reduce((total, item) => total + (item.quanlity * item.price), 0)}</td>
-              <td className=" "><Link to={`/order/${id}`}>Chi tiết</Link></td>
+              <td className=" "><Link to={`/admin/order/${id}`}>Chi tiết</Link></td>
             </tr>
           ))}
         </tbody>
