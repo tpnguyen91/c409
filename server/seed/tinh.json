@@ -1,0 +1,254 @@
+[
+  {
+    "name": "TP. HCM",
+    "title": "Xổ Số  TP. HCM",
+    "code": "XSHCM - 7F2",
+    "short": "HCM",
+    "region": "Nam"
+  },
+  {
+    "name": "Đồng Tháp",
+    "title": "Xổ Số  Đồng Tháp",
+    "code": "XSDT - C31",
+    "short": "DT",
+    "region": "Nam"
+  },
+  {
+    "name": "Cà Mau",
+    "title": "Xổ Số  Cà Mau",
+    "code": "XSCM - T07K5",
+    "short": "CM",
+    "region": "Nam"
+  },
+  {
+    "name": "Tiền Giang",
+    "title": "Xổ Số  Tiền Giang",
+    "code": "XSTG - TG-7E",
+    "short": "TG",
+    "region": "Nam"
+  },
+  {
+    "name": "Kiên Giang",
+    "title": "Xổ Số  ",
+    "code": "XSKG - 7K5",
+    "short": "KG",
+    "region": "Nam"
+  },
+  {
+    "name": "Đà Lạt",
+    "title": "Xổ Số  Đà Lạt",
+    "code": "XSDL - ĐL7K5",
+    "short": "DL",
+    "region": "Nam"
+  },
+  {
+    "name": "Long An",
+    "title": "Xổ Số  Long An",
+    "code": "XSLA - 7K5",
+    "short": "LA",
+    "region": "Nam"
+  },
+  {
+    "name": "Bình Phước",
+    "title": "Xổ Số  Bình Phước",
+    "code": "XSBP - 7K5",
+    "short": "BP",
+    "region": "Nam"
+  },
+  {
+    "name": "Hậu Giang",
+    "title": "Xổ Số  Hậu Giang",
+    "code": "XSHG - K5T7",
+    "short": "HG",
+    "region": "Nam"
+  },
+  {
+    "name": "Vĩnh Long",
+    "title": "Xổ Số  Vĩnh Long",
+    "code": "XSVL - 38VL30",
+    "short": "VL",
+    "region": "Nam"
+  },
+  {
+    "name": "Bình Dương",
+    "title": "Xổ Số  Bình Dương",
+    "code": "XSBD - 07KS30",
+    "short": "BD",
+    "region": "Nam"
+  },
+  {
+    "name": "Trà Vinh",
+    "title": "Xổ Số  Trà Vinh",
+    "code": "XSTV - 26TV30",
+    "short": "TV",
+    "region": "Nam"
+  },
+  {
+    "name": "Tây Ninh",
+    "title": "Xổ Số  Tây Ninh",
+    "code": "XSTN - 7K4",
+    "short": "TN",
+    "region": "Nam"
+  },
+  {
+    "name": "An Giang",
+    "title": "Xổ Số  An Giang",
+    "code": "XSAG - AG-7K4",
+    "short": "AG",
+    "region": "Nam"
+  },
+  {
+    "name": "Bình Thuận",
+    "title": "Xổ Số  Bình Thuận",
+    "code": "XSBTH - 7K4",
+    "short": "BT",
+    "region": "Nam"
+  },
+  {
+    "name": "Đồng Nai",
+    "title": "Xổ Số  Đồng Nai",
+    "code": "XSDN - 7K4",
+    "short": "DN",
+    "region": "Nam"
+  },
+  {
+    "name": "Cần Thơ",
+    "title": "Xổ Số  Cần Thơ",
+    "code": "XSCT - K4T7",
+    "short": "CT",
+    "region": "Nam"
+  },
+  {
+    "name": "Sóc Trăng",
+    "title": "Xổ Số  Sóc Trăng",
+    "code": "XSST - K4T07",
+    "short": "ST",
+    "region": "Nam"
+  },
+  {
+    "name": "Bến Tre",
+    "title": "Xổ Số  Bến Tre",
+    "code": "XSBTR - K30-T07",
+    "short": "BT",
+    "region": "Nam"
+  },
+  {
+    "name": "Vũng Tàu",
+    "title": "Xổ Số  Vũng Tàu",
+    "code": "XSVT - 7D",
+    "short": "VT",
+    "region": "Nam"
+  },
+  {
+    "name": "Bạc Liêu",
+    "title": "Xổ Số  Bạc Liêu",
+    "code": "XSBL - T07K4",
+    "short": "BL",
+    "region": "Nam"
+  },
+  {
+    "name": "Thừa T. Huế",
+    "title": "Xổ Số  Thừa T. Huế",
+    "code": "XSTTH",
+    "short": "TTH",
+    "region": "Trung"
+  },
+  {
+    "name": "Phú Yên",
+    "title": "Xổ Số  Phú Yên",
+    "code": "XSPY",
+    "short": "PY",
+    "region": "Trung"
+  },
+  {
+    "name": "Đắk Lắk",
+    "title": "Xổ Số  Đắk Lắk",
+    "code": "XSDLK",
+    "short": "DLK",
+    "region": "Trung"
+  },
+  {
+    "name": "Quảng Nam",
+    "title": "Xổ Số  Quảng Nam",
+    "code": "XSQNM",
+    "short": "QN",
+    "region": "Trung"
+  },
+  {
+    "name": "Đà Nẵng",
+    "title": "Xổ Số  Đà Nẵng",
+    "code": "XSDNG",
+    "short": "DNG",
+    "region": "Trung"
+  },
+  {
+    "name": "Khánh Hòa",
+    "title": "Xổ Số  Khánh Hòa",
+    "code": "XSKH",
+    "short": "KH",
+    "region": "Trung"
+  },
+  {
+    "name": "Bình Định",
+    "title": "Xổ Số  Bình Định",
+    "code": "XSBDI",
+    "short": "BDI",
+    "region": "Trung"
+  },
+  {
+    "name": "Quảng Trị",
+    "title": "Xổ Số  Quảng Trị",
+    "code": "XSQT",
+    "short": "QT",
+    "region": "Trung"
+  },
+  {
+    "name": "Quảng Bình",
+    "title": "Xổ Số  Quảng Bình",
+    "code": "XSQB",
+    "short": "QB",
+    "region": "Trung"
+  },
+  {
+    "name": "Gia Lai",
+    "title": "Xổ Số  Gia Lai",
+    "code": "XSGL",
+    "short": "GL",
+    "region": "Trung"
+  },
+  {
+    "name": "Ninh Thuận",
+    "title": "Xổ Số  Ninh Thuận",
+    "code": "XSNT",
+    "short": "NT",
+    "region": "Trung"
+  },
+  {
+    "name": "Quảng Ngãi",
+    "title": "Xổ Số  Quảng Ngãi",
+    "code": "XSQNG",
+    "short": "QNG",
+    "region": "Trung"
+  },
+  {
+    "name": "Đắk Nông",
+    "title": "Xổ Số  Đắk Nông",
+    "code": "XSDNO",
+    "short": "DNO",
+    "region": "Trung"
+  },
+  {
+    "name": "Kon Tum",
+    "title": "Xổ Số  Kon Tum",
+    "code": "XSKT",
+    "short": "KT",
+    "region": "Trung"
+  },
+  {
+    "name": "Hà Nội",
+    "title": "Xổ Số  Hà Nội",
+    "code": "XSHN",
+    "short": "HN",
+    "region": "Bắc"
+  }
+]

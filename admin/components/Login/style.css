@@ -1,0 +1,19 @@
+.login-container {
+  width: 100vw;
+  height: 100vh;
+  background-color: #fff;
+}
+
+.login-container .login_wrapper {
+  margin-top: auto;
+  padding-top: 10%;
+}
+
+.login-container .login_wrapper .login_form {
+  position: relative;
+}
+
+.login-container .error {
+  padding: 10px;
+  color: rgba(231,76,60,0.88);
+}

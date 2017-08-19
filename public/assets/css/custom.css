@@ -1,0 +1,76 @@
+/* Add here all your CSS customizations */
+.price_table_container {
+  margin-bottom: 20px
+}
+.price_table_row {
+  display: flex;
+}
+.c409_table_title {
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+}
+.c409_table_column {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.c409_table_column_3 {
+  flex: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.c409_table_column_1 {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.c409_table_column_name {
+  font-weight: bold;
+  color: #0088cc;
+}
+.c409_table_column_important {
+  display: flex;
+  flex-direction: column;
+  color: #800000;
+  font-weight: bold;
+  font-size: 28px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+.c409_table_column_result {
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+  font-size: 22px;
+  line-height: 24px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.c409_table_column_3 .c409_table_column_result, .c409_table_column_3 .c409_table_column_important {
+  flex-direction: row;
+}
+.c409_table_column_3 .col_1 {
+  width: 100%;
+}
+.c409_table_column_3 .col_2 {
+  width: 50%;
+}
+.c409_table_column_3 .col_3 {
+  width: 33.33%;
+}
+.c409_table_column_3 .col_4 {
+  width: 25%;
+}
+.ads img{
+  display: flex;
+  width: 100%;
+  margin-bottom: 20px;
+}

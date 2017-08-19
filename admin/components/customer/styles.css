@@ -1,0 +1,15 @@
+.customDropdown {
+  width: 30%;
+  margin-left: 5px;
+  position: relative;
+  float: left;
+}
+.customBtnAddNew {
+  position: relative;
+  float: right;
+}
+.customInputSearch {
+  width: 30%;
+  float: left;
+  margin-left: 5px;
+}
