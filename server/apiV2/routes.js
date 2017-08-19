@@ -2,6 +2,7 @@ const express = require('express')
 const OrderV1 = require('./v1/order')
 const NewsV1 = require('./v1/news')
 const ResultLotteryV1 = require('./v1/result-lottery')
+const ThongKeV1 = require('./v1/thong-ke');
 
 const router = express.Router()
 
@@ -19,4 +20,5 @@ router.post('/order', OrderV1.create)
 router.get('/crawler/:id', ResultLotteryV1.fetch)
 router.get('/crawler', ResultLotteryV1.fetchWiParams)
 
+route.get('/thong-ke/:route/:type', ThongKeV1.thongKe)
 module.exports = router
