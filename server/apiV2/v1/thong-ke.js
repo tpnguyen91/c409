@@ -32,13 +32,15 @@ const selectMien = (mien) => ({
   trung: 3
 }[mien]);
 
+const formatStr = str => str.replace(/\s+/g, ' ').trim();
+
 const generateDai = (dai) => {
   return !dai
     ? ''
     : dai.split(',').map(v => `dai${v}=${v}`).join('&');
 }
 
-const analyzeMainContent = ($, elem) => {
+const analyzeMainContentLo = ($) => {
   if ($('.box_thongkexoso .bangthongke tbody tr').length === 0) {
     return [];
   }
@@ -58,6 +60,22 @@ const analyzeMainContent = ($, elem) => {
       }).get(),
     }
   }).get();
+}
+
+const analyzeSubContentGan = ($) => {
+  const ganCucDai = formatStr($('.box_thongkexoso tr').eq(0).text());
+  const thongTin  = formatStr($('.box_thongkexoso tr').eq(2).text());
+  const ngayElem  = $('.box_thongkexoso tr').eq(1).find('td');
+  const tuNgay    = ngayElem.eq(1).text().trim();
+  const denNgay   = ngayElem.eq(3).text().trim();
+  return { ganCucDai, thongTin, tuNgay, denNgay };
+}
+
+const analyzeSubContentTanSuat = ($) => {
+  return $('.bangthongketangsuat tr').map((i, elem) => ({
+    so: $(elem).find('td').eq(0).text().trim(),
+    tanSuat: $(elem).find('td').eq(1).text().trim(),
+  })).get();
 }
 
 const analyzeSubContent = ($, elemList) => {
@@ -84,7 +102,7 @@ const pullPage = (params, cb) => {
   const isMien = params.type === 'mien';
   const paramStr = `tinh=${selectTinh(params.tinh)}
                     mien=${selectMien(params.mien)}
-                    dstk=${params.stk}
+                    ${params.route === 'lo-to' ? 'dstk' : 'dayso'}=${params.stk}
                     tungay${isMien ? 'mn' : ''}=${params.tungay}
                     denngay${isMien ? 'mn' : ''}=${params.denngay}
                     thu=${params.thu}
@@ -98,7 +116,11 @@ const pullPage = (params, cb) => {
       return cb(error || `error code: ${res.statusCode}`);
     }
     const $ = cheerio.load(body);
-    const mainResult = analyzeMainContent($);
+    const mainResult = params.route === 'lo-to'
+                     ? analyzeMainContentLo($)
+                     : params.route === 'gan-cuc-dai'
+                        ? analyzeSubContentGan($)
+                        : analyzeMainContentTanSuat($);
     const subResult = analyzeSubContent($);
 
     return cb(null, { mainResult, subResult });
@@ -114,7 +136,7 @@ const thongKe = (req, res, next) => {
       console.log(err);
       return res.status(400).send(err);
     }
-    if (result.mainResult.length === 0) {
+    if (Array.isArray(result.mainResult) && result.mainResult.length === 0) {
       result.message = '- Không xuất hiện dãy số này trong thời gian trên !';
     }
 
